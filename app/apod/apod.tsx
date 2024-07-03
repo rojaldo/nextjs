@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from 'next/image'
+import { YouTubeEmbed } from '@next/third-parties/google'
 
 import {getApod } from "./server-actions";
 import { IApod } from "../models/apod";
@@ -26,11 +27,17 @@ const ApodComponent: React.FC<ApodProps> = ({ apod }) =>  {
 
     let media = <></>
     if (apodData.mediaType === 'video') {
-        media = <p>is video</p>
+        media = <YouTubeEmbed videoid={apod.videoId} height={400} params="controls=0" />
     } else if (apodData.mediaType === 'image') {
-        media = <img src={apodData.url} alt={apodData.title} className="img-fluid" />
+        media = <Image
+        src={apodData.url}
+        alt={apodData.title}
+        width={500}
+        height={500}
+    ></Image>
     }
 
+    
     
     return ( 
         <section>
@@ -48,12 +55,7 @@ const ApodComponent: React.FC<ApodProps> = ({ apod }) =>  {
                         className="h-100 p-5 text-black bg-light border rounded-3"
                     >
                         <h2>{apodData.title}</h2>
-                        <Image
-                            src={apodData.url}
-                            alt={apodData.title}
-                            width={500}
-                            height={500}
-                        ></Image>
+                        {media}
                         <p>
                             {apodData.explanation}
                         </p>

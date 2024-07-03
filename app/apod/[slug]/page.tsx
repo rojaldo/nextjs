@@ -25,11 +25,11 @@ async function getData(date: string): Promise<IApod> {
 
 export default async function Page({ params }: { params: { slug: string } }) {
     const apod = await getData(params.slug)
-    const myApod: IApod = { title: apod.title, date: apod.date, explanation: apod.explanation, url: apod.url, hdurl: apod.hdurl, mediaType: apod.mediaType, serviceVersion: apod.serviceVersion, isVideo: apod.isVideo, isImage: apod.isImage, videoId: apod.videoId };
+    // const myApod: IApod = { title: apod.title, date: apod.date, explanation: apod.explanation, url: apod.url, hdurl: apod.hdurl, mediaType: apod.mediaType, serviceVersion: apod.serviceVersion, isVideo: apod.isVideo, isImage: apod.isImage, videoId: apod.videoId };
 
     return <>
         <div className="container">
-            <ApodComponent apod={myApod} />
+            <ApodComponent apod={apod.getPlainObject()} />
         </div>
     </>
 }

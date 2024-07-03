@@ -22,7 +22,7 @@ async function getData(): Promise<IApod> {
   
   export default async function Page() {
     const apod = await getData()
-    let myApod: IApod = { title: apod.title, date: apod.date, explanation: apod.explanation, url: apod.url, hdurl: apod.hdurl, mediaType: apod.mediaType, serviceVersion: apod.serviceVersion, isVideo: apod.isVideo, isImage: apod.isImage, videoId: apod.videoId };
+    // let myApod: IApod = { title: apod.title, date: apod.date, explanation: apod.explanation, url: apod.url, hdurl: apod.hdurl, mediaType: apod.mediaType, serviceVersion: apod.serviceVersion, isVideo: apod.isVideo, isImage: apod.isImage, videoId: apod.videoId };
   
     return <main>
         
@@ -30,7 +30,7 @@ async function getData(): Promise<IApod> {
         <div
             className="container"
         >
-            <ApodComponent apod={myApod}/>
+            <ApodComponent apod={apod.getPlainObject()}/>
 
             
         </div>

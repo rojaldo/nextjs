@@ -9,6 +9,7 @@ export interface IApod {
     isVideo: boolean;
     isImage: boolean;
     videoId: string;
+    getPlainObject(): any;
 }
 
 
@@ -34,11 +35,11 @@ export class Apod implements IApod{
             this._hdurl = json.hdurl;
             this._mediaType = json.media_type;
             this._serviceVersion = json.service_version;
-            if (json.mediaType === 'video') {
+            if (this.mediaType === 'video') {
                 this._isVideo = true;
                 this._isImage = false;
                 this._videoId = this._getVideoId(json.url);
-            }else if (json.mediaType === 'image') {
+            }else if (this.mediaType === 'image') {
                 this._isImage = true;
                 this._isVideo = false;
             }
@@ -94,6 +95,21 @@ export class Apod implements IApod{
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
         var match = url.match(regExp);
         return (match&&match[7].length==11)? match[7] : '';
+    }
+
+    public getPlainObject() {
+        return {
+            title: this.title,
+            date: this.date,
+            explanation: this.explanation,
+            url: this.url,
+            hdurl: this.hdurl,
+            mediaType: this.mediaType,
+            serviceVersion: this.serviceVersion,
+            isVideo: this.isVideo,
+            isImage: this.isImage,
+            videoId: this.videoId
+        }
     }
 
 }
