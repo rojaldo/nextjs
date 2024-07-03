@@ -1,0 +1,3262 @@
+:source-highlighter: highlight.js
+
+= Next.js
+
+== Introducción
+
+Next.js es un framework de React para construir aplicaciones web full-stack. Utilizas componentes de React para construir interfaces de usuario y Next.js para características y optimizaciones adicionales.
+
+Next.js también abstrae y configura automáticamente las herramientas necesarias para React, como el empaquetado, la compilación y más. Esto le permite concentrarse en la construcción de su aplicación en lugar de pasar tiempo con la configuración.
+
+.Principales características de Next.js
+* *Routing:*	Un enrutador basado en el sistema de archivos construido sobre Componentes del Servidor que admite layouts, enrutamiento anidado, estados de carga, manejo de errores y más.
+* *Rendering:*	Renderizado del lado del cliente y del servidor con Componentes del Cliente y del Servidor. Además, optimizado con Renderizado Estático y Dinámico en el servidor con Next.js.
+* *Data Fetching:*	Simplificación de la obtención de datos con async/await en Componentes del Servidor, y una API de fetch extendida para la memorización de solicitudes, el almacenamiento en caché de datos y la revalidación.
+* *Styling:*	Soporte para sus métodos de estilo preferidos, incluidos los Módulos CSS, Tailwind CSS y CSS-in-JS
+* *Optimizations:*	Optimizaciones de imágenes, fuentes y scripts para mejorar los Core Web Vitals y la experiencia del usuario de su aplicación.
+* *TypeScript:*	Soporte mejorado para TypeScript, con una mejor comprobación de tipos y una compilación más eficiente, así como un complemento TypeScript personalizado y un comprobador de tipos.
+
+=== App Router vs Pages Router
+
+Next.js tiene dos enrutadores diferentes: el Enrutador de Aplicaciones y el Enrutador de Páginas. El Enrutador de Aplicaciones es un enrutador más nuevo que le permite utilizar las últimas características de React, como Server Components y streaming. El Enrutador de Páginas es el enrutador original de Next.js, que permite construir aplicaciones React renderizadas en el servidor y sigue siendo compatible con las aplicaciones antiguas de Next.js.
+
+== instalar Next.js
+
+Para comenzar a usar Next.js, primero debe instalarlo en su proyecto. Puede hacerlo utilizando npm o yarn. 
+
+.A continuación se muestra un ejemplo de cómo instalar Next.js con npx:
+[source,shell]
+```
+npx create-next-app@latest
+```
+
+.Esto creará un nuevo proyecto Next.js y habrá que contestar algunas preguntas para configurar el proyecto:
+* What is your project named? my-app
+* Would you like to use TypeScript? No / Yes
+* Would you like to use ESLint? No / Yes
+* Would you like to use Tailwind CSS? No / Yes
+* Would you like to use `src/` directory? No / Yes
+* Would you like to use App Router? (recommended) No / Yes
+* Would you like to customize the default import alias (@/*)? No / Yes
+* What import alias would you like configured? @/*
+
+.Otra alternativa es instalar Next.js con npm:
+[source,shell]
+```
+npm install next@latest react@latest react-dom@latest
+```
+
+.En el directorio de su proyecto, puede crear un archivo `package.json` con las siguientes dependencias:
+[source,json]
+```
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  }
+}
+```
+
+== Fundamentos de rutado
+
+El esqueleto de cada aplicación es el enrutamiento. Esta página le presentará los conceptos fundamentales del enrutamiento para la web y cómo manejar el enrutamiento en Next.js.
+
+=== Terminología
+
+.Antes de comenzar, es importante comprender algunos términos clave relacionados con el enrutamiento en la web:
+
+* *Árbol (Tree):* Una convención para visualizar una estructura jerárquica. Por ejemplo, un árbol de componentes con componentes padres e hijos, una estructura de carpetas, etc.
+* *Subárbol (Subtree):* Parte de un árbol, que comienza en una nueva raíz (primera) y termina en las hojas (última).
+* *Raíz (Root):* El primer nodo en un árbol o subárbol, como un layout raíz.
+* *Hoja (Leaf):* Nodos en un subárbol que no tienen hijos, como el último segmento en una ruta de URL.
+* *Segmento de URL (URL Segment)*: Parte de la ruta de URL delimitada por barras.
+* *Ruta de URL (URL Path)*: Parte de la URL que viene después del dominio (compuesta por segmentos).
+
+=== App Router
+
+En la versión 13, Next.js introdujo un nuevo App Router construido sobre *Componentes de Servidor* de React, que admite layouts compartidos, enrutamiento anidado, estados de carga, manejo de errores y más.
+
+El App Router funciona en un nuevo directorio llamado app. El directorio de la aplicación funciona junto con el directorio de páginas para permitir la adopción incremental. Esto le permite optar por algunas rutas de su aplicación en el nuevo comportamiento mientras mantiene otras rutas en el directorio de páginas para el comportamiento anterior. Si su aplicación utiliza el directorio de páginas, consulte también la documentación del Enrutador de Páginas.
+
+El App Router tiene prioridad sobre el Enrutador de Páginas. Las rutas en directorios no deben resolver a la misma ruta de URL y causarán un error en tiempo de compilación para evitar un conflicto.
+
+Por defecto, los componentes dentro de app son Componentes de Servidor de React. Esta es una optimización de rendimiento y le permite adoptarlos fácilmente, y también puede usar Componentes de Cliente.
+
+=== Roles de directorios y archivos
+
+Next.js usa un enrutador basado en el sistema de archivos donde:
+
+* Los archivos se utilizan para crear una interfaz de usuario que se muestra para un segmento de ruta.
+* Cada directorio en una ruta representa un segmento de ruta. Cada segmento de ruta se asigna a un segmento correspondiente en una ruta de URL.
+
+=== Rutas anidadas
+
+Para crear una ruta anidada, se anidan carpetas entre sí. Por ejemplo, puede agregar una nueva ruta /dashboard/settings anidando dos nuevas carpetas en el directorio de la aplicación.
+
+.La ruta /dashboard/settings se compone de tres segmentos:
+
+* */* (Root segment)
+* *dashboard* (Segment)
+* *settings* (Leaf segment)
+
+=== Archivos especiales
+
+.Next.js proporciona un conjunto de archivos especiales para crear una interfaz de usuario con un comportamiento específico en rutas anidadas:
+* *page.tsx*	UI única de una ruta y hacer que las rutas sean públicamente accesibles
+* *layout.tsx*	UI compartida para un segmento y sus hijos
+* *template.tsx*	UI de layout re-renderizado especializado
+* *route.tsx*	Punto final de API del lado del servidor
+* *loading.tsx*	UI de carga para un segmento y sus hijos
+* *not-found.tsx*	UI no encontrada para un segmento y sus hijos
+* *error.tsx*	UI de error para un segmento y sus hijos
+* *global-error.tsx*	UI de error global
+
+==== page.tsx
+
+Un archivo page.tsx es una interfaz de usuario única para una ruta. Puede definir una página exportando por defecto un componente desde un archivo page.tsx.
+
+.Propiedades de las páginas:
+* *params:* Parámetros del path de la URL.
+* *searchParams:* Parámetros en la query de la URL.
+
+.Ejemplo de una página:
+```jsx
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  return <h1>My Page</h1>
+}
+```
+.ejemplo de una página con parámetros de ruta:
+[cols="1,1,1", options="header"]
+|===
+| Ejemplo                          | URL         | params
+
+| app/shop/[slug]/page.tsx          | /shop/1     | { slug: '1' }
+| app/shop/[category]/[item]/page.tsx | /shop/1/2 | { category: '1', item: '2' }
+| app/shop/[...slug]/page.tsx       | /shop/1/2   | { slug: ['1', '2'] }
+|===
+
+.ejemplo de una página con parámetros de query:
+[cols="1,1", options="header"]
+|===
+| URL            | searchParams
+
+| /shop?a=1      | { a: '1' }
+| /shop?a=1&b=2  | { a: '1', b: '2' }
+| /shop?a=1&a=2  | { a: ['1', '2'] }
+|===
+
+
+==== layout.tsx
+
+Un layout es una UI que se comparte entre varias rutas. Los layouts se utilizan para envolver un segmento de ruta y sus hijos en una UI común.
+
+.Ejemplo de un layout:
+```jsx
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return <section>{children}</section>
+}
+```
+
+Un root layout es el layout más alto en el directorio de la aplicación raíz. Se utiliza para definir las etiquetas <html> y <body> y otras interfaces de usuario compartidas globalmente.
+
+.Ejemplo de un root layout:
+```jsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <main>{children}</main>
+      </body>
+    </html>
+  )
+}
+```
+
+.Propiedades de los layouts:
+* *children:* Componentes React que se envuelven en el layout.
+* *params:* Parámetros de ruta de URL.
+
+.Tabla de ejemplos de parámetros de ruta:
+[cols="1,1,1", options="header"]
+|===
+| Ejemplo                             | URL            | params
+
+| app/dashboard/[team]/layout.tsx      | /dashboard/1   | { team: '1' }
+| app/shop/[tag]/[item]/layout.tsx     | /shop/1/2      | { tag: '1', item: '2' }
+| app/blog/[...slug]/layout.tsx        | /blog/1/2      | { slug: ['1', '2'] }
+|===
+
+.Ejemplo de un layout con parámetros de ruta:
+```jsx
+export default function ShopLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: {
+    tag: string
+    item: string
+  }
+}) {
+  // URL -> /shop/shoes/nike-air-max-97
+  // `params` -> { tag: 'shoes', item: 'nike-air-max-97' }
+  return <section>{children}</section>
+}
+```
+
+Los layouts no pueden recibir parámetros en la query de la URL. Si necesitas acceder a los parámetros de la query, puedes usar page.tsx o route.tsx.
+
+==== template.tsx
+
+El archivo template.tsx es similar a un layout en el sentido de que envuelve cada layout secundario o página. A diferencia de los layouts que persisten en las rutas y mantienen el estado, los templates crean una nueva instancia para cada uno de sus hijos en la navegación.
+
+Por defecto, template es un Componente de Servidor, pero también se puede utilizar como un Componente de Cliente a través de la directiva "use client".
+
+Cuando un usuario navega entre rutas que comparten un template, se monta una nueva instancia del componente, se recrean los elementos DOM, no se conserva el estado y los efectos se vuelven a sincronizar.
+
+.Aunque es menos común, es posible usar un template en lugar de un layout si se necesita:
+
+* Usar características que dependen de useEffect (por ejemplo, registrar vistas de página) y useState (por ejemplo, un formulario de comentarios por página).
+* Cambiar el comportamiento predeterminado del framework. Por ejemplo, los límites de Suspense dentro de los layouts solo muestran el fallback la primera vez que se carga el Layout y no al cambiar de página. Para los templates, el fallback se muestra en cada navegación.
+
+.Propiedades de los templates:
+* *children:* Componentes React que se envuelven en el template.
+
+.Ejemplo de un template:
+```jsx
+export default function Template({ children }: { children: React.ReactNode }) {
+  return <div>{children}</div>
+}
+```
+
+==== route.tsx
+
+El archivo route.tsx permite crear controladores de solicitud personalizados para una ruta determinada. Los siguientes métodos HTTP son compatibles: GET, POST, PUT, PATCH, DELETE, HEAD y OPTIONS. Suele estar en el directorio de la aplicación y se utiliza para manejar solicitudes de API del lado del servidor.
+
+.Ejemplo de un route.tsx:
+```jsx
+export async function GET(request: Request) {}
+ 
+export async function HEAD(request: Request) {}
+ 
+export async function POST(request: Request) {}
+ 
+export async function PUT(request: Request) {}
+ 
+export async function DELETE(request: Request) {}
+ 
+export async function PATCH(request: Request) {}
+ 
+// If `OPTIONS` is not defined, Next.js will automatically implement `OPTIONS` and  set the appropriate Response `Allow` header depending on the other methods defined in the route handler.
+export async function OPTIONS(request: Request) {}
+```
+
+.Parámetros de los controladores de solicitud:
+* *request:* Objeto de solicitud HTTP.
+* *context:* Objeto de contexto de la solicitud.
+
+.Ejemplo de un controlador de solicitud:
+```jsx
+type Params = {
+  team: string
+}
+ 
+export async function GET(request: Request, context: { params: Params }) {
+  const team = context.params.team // '1'
+}
+ 
+// Define params type according to your route parameters { tag: '1', item: '2' }
+type Params = {
+  tag: string
+  item: string
+}
+
+export async function GET(request: Request, context: { params: Params }) {
+  const tag = context.params.tag // '1'
+  const item = context.params.item // '2'
+}
+```
+
+
+==== loading.tsx
+
+El archivo loading.tsx es una interfaz de usuario de carga que se muestra mientras se cargan los datos de una ruta. Se utiliza para mostrar un indicador de carga o un mensaje de espera mientras se obtienen los datos.
+
+.Ejemplo de un loading.tsx:
+```jsx
+export default function Loading() {
+  // Or a custom loading skeleton component
+  return <p>Loading...</p>
+}
+```
+
+==== not-found.tsx
+
+El archivo not-found.tsx se utiliza para renderizar la interfaz de usuario cuando se lanza la función notFound dentro de un segmento de ruta. Junto con servir una interfaz de usuario personalizada, Next.js devolverá un código de estado HTTP 200 para respuestas en streaming y 404 para respuestas no en streaming.
+
+Además de capturar los errores esperados de notFound(), el archivo raíz app/not-found.tsx también maneja cualquier URL no coincidente para toda su aplicación. Esto significa que los usuarios que visiten
+
+.Ejemplo de un not-found.tsx:
+```jsx
+import Link from 'next/link'
+ 
+export default function NotFound() {
+  return (
+    <div>
+      <h2>Not Found</h2>
+      <p>Could not find requested resource</p>
+      <Link href="/">Return Home</Link>
+    </div>
+  )
+}
+```
+
+.Por defecto, not-found es un Componente de Servidor. Se puede marcar como asíncrono para obtener y mostrar datos en la carga:
+```jsx
+import Link from 'next/link'
+import { headers } from 'next/headers'
+ 
+export default async function NotFound() {
+  const headersList = headers()
+  const domain = headersList.get('host')
+  const data = await getSiteData(domain)
+  return (
+    <div>
+      <h2>Not Found: {data.name}</h2>
+      <p>Could not find requested resource</p>
+      <p>
+        View <Link href="/blog">all posts</Link>
+      </p>
+    </div>
+  )
+}
+```
+
+==== error.tsx
+
+El archivo error.tsx define un límite de interfaz de usuario de error para un segmento de ruta.
+
+.Se usa para capturar errores inesperados que ocurren en Componentes de Servidor y de Cliente y mostrar una interfaz de usuario de reserva:
+```jsx
+'use client' // Error components must be Client Components
+ 
+import { useEffect } from 'react'
+ 
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error(error)
+  }, [error])
+ 
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button
+        onClick={
+          // Attempt to recover by trying to re-render the segment
+          () => reset()
+        }
+      >
+        Try again
+      </button>
+    </div>
+  )
+}
+```
+
+.Propiedades de la interfaz de usuario de error:
+* *error:* Objeto de error que contiene información sobre el error.
+** *message:* Mensaje de error.
+** *digest:* Identificador único del error.
+* *reset:* Función de reinicio que intenta volver a renderizar el segmento.
+
+
+
+==== global-error.tsx
+
+Para manejar errores en el root layout, se puede usar un archivo global-error.tsx ubicado en el directorio raíz de la aplicación (app/global-error.tsx). global-error.tsx reemplaza a layout.tsx cuando está activo y, por lo tanto, debe definir sus propias etiquetas <html> y <body>.
+
+.Un ejemplo de un global-error.tsx:
+```jsx
+'use client'
+ 
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <html>
+      <body>
+        <h2>Something went wrong!</h2>
+        <button onClick={() => reset()}>Try again</button>
+      </body>
+    </html>
+  )
+}
+```
+
+=== Definir rutas
+
+Next.js usa un enrutador basado en el sistema de archivos donde los directorios se utilizan para definir rutas.
+
+Cada directorio representa un segmento de ruta que se asigna a un segmento de URL. Para crear una ruta anidada, puede anidar carpetas entre sí.
+
+Un archivo especial page.tsx (page.js, page.tsx) se utiliza para hacer que los segmentos de ruta sean públicamente accesibles. Si no se proporciona un archivo page.tsx, la ruta se considera privada y no se puede acceder directamente.
+
+=== Crear una UI
+
+Next.js usa una convención de nombres para crear una interfaz de usuario en cada segmento de ruta. Los archivos especiales más comunes son páginas para mostrar una interfaz de usuario única para una ruta y layouts para mostrar una interfaz de usuario que se comparte en varias rutas.
+
+.Por ejemplo, para crear su primera página, agregue un archivo page.tsx dentro del directorio de la aplicación y exporte un componente React:
+```jsx
+export default function Page() {
+  return <h1>Hello, Next.js!</h1>
+}
+```
+
+=== Pages y layouts
+
+Los archivos especiales layout.tsx, page.tsx y template.tsx le permiten crear una interfaz de usuario para una ruta. Esta página le guiará sobre cómo y cuándo usar estos archivos especiales.
+
+
+==== Pages
+
+Una Page es una interfaz de usuario única para una ruta. Puede definir una página exportando por defecto un componente desde un archivo page.tsx.
+
+.Por ejemplo, para crear su página de índice, agregue el archivo page.tsx dentro del directorio de la aplicación:
+```jsx
+// `app/page.tsx` is the UI for the `/` URL
+export default function Page() {
+  return <h1>Hello, Home page!</h1>
+}
+```
+
+Para crear más páginas, hay que crear un nuevo directorio y agregar el archivo page.tsx dentro de éste. Por ejemplo, para crear una página para la ruta */dashboard*, hay que crear un nuevo directorio llamado dashboard y agregar el archivo page.tsx dentro de éste:
+
+.Ejemplo de una página de dashboard:
+```jsx
+// `app/dashboard/page.tsx` is the UI for the `/dashboard` URL
+export default function Page() {
+  return <h1>Hello, Dashboard Page!</h1>
+}
+```
+
+.En resumen:
+* Las extensiones de archivo .js, .jsx o .tsx se pueden utilizar para las páginas.
+* Una página es siempre la hoja del subárbol de rutas.
+* Se requiere un archivo page.tsx para hacer que un segmento de ruta sea públicamente accesible.
+* Las páginas son Componentes de Servidor de forma predeterminada, pero se pueden configurar como Componentes de Cliente.
+* Las páginas pueden obtener datos. Consulte la sección Obtención de datos para obtener más información.
+
+==== Layouts
+
+Un layout es una interfaz de usuario que se comparte entre varias rutas. En la navegación, los layouts conservan el estado, siguen siendo interactivos y no se vuelven a renderizar. Los layouts también se pueden anidar.
+
+Se puede definir un layout exportando por defecto un componente React desde un archivo layout.tsx. El componente debe aceptar una propiedad children que se rellenará con un layout secundario (si existe) o una página durante el renderizado.
+
+.Por ejemplo, el layout se compartirá con las páginas /dashboard y /dashboard/settings:
+```jsx
+export default function DashboardLayout({
+  children, // will be a page or nested layout
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <section>
+      {/* Include shared UI here e.g. a header or sidebar */}
+      <nav></nav>
+ 
+      {children}
+    </section>
+  )
+}
+```
+
+==== Root Layout
+
+EL root layout se define en el nivel superior del directorio de la aplicación y se aplica a todas las rutas. Este layout es obligatorio y debe contener etiquetas html y body, lo que le permite modificar el HTML inicial devuelto por el servidor.
+
+.Ejemlo de un root layout:
+```jsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>
+        {/* Layout UI */}
+        <main>{children}</main>
+      </body>
+    </html>
+  )
+}
+```
+
+=== Layouts anidados
+
+Por defecto, los layouts en la jerarquía de carpetas están anidados, lo que significa que envuelven los layouts secundarios a través de su propiedad children. Puede anidar layouts agregando layout.tsx dentro de segmentos de ruta específicos (directorios).
+
+.Por ejemplo, para crear un layout para la ruta /dashboard, agregue un nuevo archivo layout.tsx dentro de la carpeta dashboard:
+```jsx
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return <section>{children}</section>
+}
+```
+
+Si se combinan los dos layouts anteriores, el layout raíz (app/layout.tsx) envolvería el layout del panel de control (app/dashboard/layout.tsx), que envolvería los segmentos de ruta dentro de app/dashboard/*.
+
+.En resumen:
+* Solo el layout raíz puede contener etiquetas <html> y <body>.
+* Cuando se define un archivo layout.tsx y page.tsx en la misma carpeta, el layout envolverá la página.
+* Los layouts son Componentes de Servidor de forma predeterminada, pero se pueden configurar como Componentes de Cliente.
+* Los layouts pueden obtener datos. 
+* No es posible pasar datos entre un layout principal y sus hijos. Sin embargo, puede obtener los mismos datos en una ruta más de una vez, y React deduplicará automáticamente las solicitudes sin afectar el rendimiento.
+* Los layouts no tienen acceso a los segmentos de ruta debajo de sí mismos. Para acceder a todos los segmentos de ruta, puede usar useSelectedLayoutSegment o useSelectedLayoutSegments en un Componente de Cliente.
+* Puede usar Grupos de Rutas para incluir y excluir segmentos de ruta específicos en layouts compartidos.
+* Puede usar Grupos de Rutas para crear varios layouts raíz. Vea un ejemplo aquí.
+* Migración desde el directorio de páginas: el layout raíz reemplaza los archivos _app.js y _document.js. Consulte la guía de migración.
+
+=== Templates
+
+Los templates son similares a los layouts en el sentido de que envuelven cada layout secundario o página. A diferencia de los layouts que persisten en las rutas y mantienen el estado, los templates crean una nueva instancia para cada uno de sus hijos en la navegación. Esto significa que cuando un usuario navega entre rutas que comparten un template, se monta una nueva instancia del componente, se recrean los elementos DOM, no se conserva el estado y los efectos se vuelven a sincronizar.
+
+.Puede haber casos en los que necesite esos comportamientos específicos, y los templates serían una opción más adecuada que los layouts. Por ejemplo:
+
+* Caracteríasticas que dependen de useEffect (por ejemplo, registrar vistas de página) y useState (por ejemplo, un formulario de comentarios por página).
+* Para cambiar el comportamiento predeterminado del framework. Por ejemplo, los límites de Suspense dentro de los layouts solo muestran el fallback la primera vez que se carga el Layout y no al cambiar de página. Para los templates, el fallback se muestra en cada navegación.
+
+
+.Un template se puede definir exportando un componente React por defecto desde un archivo template.js. El componente debe aceptar una propiedad children.
+```jsx
+export default function Template({ children }: { children: React.ReactNode }) {
+  return <div>{children}</div>
+}
+```
+
+.En términos de anidación, template.js se renderiza entre un layout y sus hijos. Aquí hay una salida simplificada:
+[source,html]
+```
+<Layout>
+  {/* Note that the template is given a unique key. */}
+  <Template key={routeParam}>{children}</Template>
+</Layout>
+```
+
+=== Metadata
+
+No debemos añadir manualmente etiquetas <head> como <title> y <meta> a los layouts raíz. En su lugar, debemos usar la API de Metadata que maneja automáticamente requisitos avanzados como el streaming y la deduplicación de elementos <head>.
+
+En el directorio de la aplicación, puede modificar los elementos HTML <head> como el título y meta utilizando las API de Metadata.
+
+.Los metadatos se pueden definir exportando un objeto de metadatos o una función generateMetadata en un archivo layout.tsx o page.tsx.
+```jsx
+import { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'Next.js',
+}
+ 
+export default function Page() {
+  return '...'
+}
+```
+
+=== Enlaces y Navegación
+
+.Hay cuatro formas de navegar entre rutas en Next.js:
+
+* El componente <Link>
+* El hook useRouter (Componentes del Cliente)
+* La función de redirección (Componentes del Servidor)
+* El API de Historial nativa
+
+==== Componente <Link>
+
+<Link> es un componente integrado que extiende la etiqueta HTML <a> para proporcionar precarga y navegación del lado del cliente entre rutas. Es la forma principal y recomendada de navegar entre rutas en Next.js.
+
+.Se puede usar importándolo desde next/link y pasando una propiedad href al componente:
+```jsx
+import Link from 'next/link'
+ 
+export default function Page() {
+  return <Link href="/dashboard">Dashboard</Link>
+}
+```
+
+.Un resumen de las props disponibles para el componente Link:
+[cols="4*"]
+|===
+| Prop	| Ejemplo	| Tipo	| Obligatorio
+| href	| href="/dashboard"	| String o Object	| Sí
+| replace	| replace={false}	| Boolean	| - 
+| scroll	| scroll={false}	| Boolean	| - 
+| prefetch	| prefetch={false}	| Boolean o null	| - 
+|===
+
+Cuando se enlaza a segmentos dinámicos, se pueden usar literales de plantilla e interpolación para generar una lista de enlaces.
+
+.Por ejemplo, para generar una lista de publicaciones de blog:
+```jsx
+import Link from 'next/link'
+ 
+export default function PostList({ posts }) {
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
+```
+
+.Es posible usar usePathname() para determinar si un enlace está activo. Por ejemplo, para agregar una clase al enlace activo, se puede comprobar si la ruta actual coincide con el href del enlace:
+```jsx
+'use client'
+ 
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+ 
+export function Links() {
+  const pathname = usePathname()
+ 
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link className={`link ${pathname === '/' ? 'active' : ''}`} href="/">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link
+            className={`link ${pathname === '/about' ? 'active' : ''}`}
+            href="/about"
+          >
+            About
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+```
+
+El comportamiento predeterminado del App Router de Next.js es desplazarse al principio de una nueva ruta o mantener la posición de desplazamiento para la navegación hacia atrás y hacia adelante.
+
+Si quieres desplazarte a un id específico en la navegación, puedes añadir tu URL con un enlace de hash # o simplemente pasar un enlace de hash a la propiedad href. Esto es posible ya que <Link> se renderiza a un elemento <a>.
+
+.Por ejemplo, para desplazarse a un elemento con el id "section" en la página:
+```jsx
+<Link href="/dashboard#settings">Settings</Link>
+ 
+// Output
+<a href="/dashboard#settings">Settings</a>
+```
+
+==== El hook useRouter
+
+El hook useRouter es una API de navegación que proporciona acceso a la ruta actual y a los métodos de navegación. Se puede utilizar en Componentes de Cliente para acceder a la ruta actual y a los métodos de navegación.
+
+.El hook useRouter se puede importar desde next/navigation y se puede utilizar para acceder a la ruta actual y a los métodos de navegación:
+```jsx
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+ 
+export default function Page() {
+  const router = useRouter()
+ 
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      Dashboard
+    </button>
+  )
+}
+```
+
+.Los métodos de navegación disponibles en el hook useRouter son:
+* *router.push(href: string, { scroll: boolean }):* Realiza una navegación del lado del cliente a la ruta proporcionada y agrega una nueva entrada en la pila de historial del navegador.
+* *router.replace(href: string, { scroll: boolean }):* Realiza una navegación del lado del cliente a la ruta proporcionada sin agregar una nueva entrada en la pila de historial del navegador.
+* *router.refresh():* Refresca la ruta actual. Realiza una nueva solicitud al servidor, vuelve a obtener las solicitudes de datos y vuelve a renderizar los Componentes del Servidor. El cliente fusionará la carga actualizada de Componentes de Servidor de React sin perder el estado de React del lado del cliente no afectado (por ejemplo, useState) o el estado del navegador (por ejemplo, la posición de desplazamiento).
+* *router.prefetch(href: string):* Precarga la ruta proporcionada para transiciones más rápidas del lado del cliente.
+* *router.back():* Navega hacia atrás a la ruta anterior en la pila de historial del navegador.
+* *router.forward():* Navega hacia adelante a la siguiente página en la pila de historial del navegador.
+
+==== La función de redirect
+
+La función de redirección es una API de navegación que se puede utilizar en Componentes de Servidor para redirigir a una nueva ruta. La función de redirección se puede importar desde next/navigation y se puede utilizar para redirigir a una nueva ruta.
+
+.Por ejemplo, para redirigir a la ruta /login:
+```jsx
+import { redirect } from 'next/navigation'
+ 
+async function fetchTeam(id: string) {
+  const res = await fetch('https://...')
+  if (!res.ok) return undefined
+  return res.json()
+}
+ 
+export default async function Profile({ params }: { params: { id: string } }) {
+  const team = await fetchTeam(params.id)
+  if (!team) {
+    redirect('/login')
+  }
+ 
+  // ...
+}
+```
+
+.En resumen:
+* redirect devuelve un código de estado 307 (Redirección temporal) de forma predeterminada. Cuando se utiliza en una Acción del Servidor, devuelve un 303 (Ver Otro), que se utiliza comúnmente para redirigir a una página de éxito como resultado de una solicitud POST.
+* redirect lanza internamente un error, por lo que debe llamarse fuera de bloques try/catch.
+* redirect se puede llamar en Componentes del Cliente durante el proceso de renderizado, pero no en controladores de eventos. En su lugar, se puede utilizar el hook useRouter.
+* redirect también acepta URLs absolutas y se puede utilizar para redirigir a enlaces externos.
+* Si quieres redirigir antes del proceso de renderizado, utilice next.config.tsx o Middleware.
+
+==== API de Historial nativa
+
+Next.js proporciona una API de Historial nativa que se puede utilizar para acceder a la pila de historial del navegador y a los métodos de navegación. La API de Historial nativa se puede utilizar en Componentes de Cliente para acceder a la pila de historial del navegador y a los métodos de navegación.
+
+Podemos utilizar los métodos nativos *window.history.pushState* y *window.history.replaceState* para actualizar la pila de historial del navegador sin recargar la página.
+
+PushState y replaceState se integran en el Router de Next.js, lo que le permite sincronizarse con usePathname y useSearchParams.
+
+.window.history.pushState se usa para añadir una nueva entrada a la pila de historial del navegador. El usuario puede navegar hacia atrás al estado anterior. Por ejemplo, para ordenar una lista de productos:
+```jsx
+'use client'
+ 
+import { useSearchParams } from 'next/navigation'
+ 
+export default function SortProducts() {
+  const searchParams = useSearchParams()
+ 
+  function updateSorting(sortOrder: string) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('sort', sortOrder)
+    window.history.pushState(null, '', `?${params.toString()}`)
+  }
+ 
+  return (
+    <>
+      <button onClick={() => updateSorting('asc')}>Sort Ascending</button>
+      <button onClick={() => updateSorting('desc')}>Sort Descending</button>
+    </>
+  )
+}
+```
+
+.window.history.replaceState se usa para reemplazar la entrada actual en la pila de historial del navegador. El usuario no puede navegar hacia atrás al estado anterior. Por ejemplo, para cambiar la configuración regional de la aplicación:
+```jsx
+'use client'
+ 
+import { usePathname } from 'next/navigation'
+ 
+export function LocaleSwitcher() {
+  const pathname = usePathname()
+ 
+  function switchLocale(locale: string) {
+    // e.g. '/en/about' or '/fr/contact'
+    const newPath = `/${locale}${pathname}`
+    window.history.replaceState(null, '', newPath)
+  }
+ 
+  return (
+    <>
+      <button onClick={() => switchLocale('en')}>English</button>
+      <button onClick={() => switchLocale('fr')}>French</button>
+    </>
+  )
+}
+```
+
+=== Carga de UI y Streaming
+El archivo archivo loading.tsx se usa para crear una interfaz de usuario de carga significativa con React Suspense. Con esta convención, se puede mostrar un estado de carga instantáneo desde el servidor mientras se carga el contenido de un segmento de ruta. El nuevo contenido se intercambia automáticamente una vez que se completa el renderizado.
+
+==== Instant Loading States
+
+Un *instant loading state* es una interfaz de usuario de reserva que se muestra inmediatamente al navegar. Puede pre-renderizar indicadores de carga como esqueletos y spinners, o una parte pequeña pero significativa de futuras pantallas como una foto de portada, título, etc. Esto ayuda a los usuarios a entender que la aplicación está respondiendo y proporciona una mejor experiencia de usuario.
+
+.Crear un estado de carga añadiendo un archivo loading.js dentro de un directorio.
+```jsx
+export default function Loading() {
+  // You can add any UI inside Loading, including a Skeleton.
+  return <LoadingSkeleton />
+}
+```
+
+En el mismo directorio, loading.js se anidará dentro de layout.tsx. Envolverá automáticamente el archivo page.tsx y cualquier hijo en un límite de <Suspense>.
+
+.En resumen:
+* Navigation es inmediata, incluso con enrutamiento centrado en el servidor.
+* Navigation es interrumpible, lo que significa que cambiar de ruta no necesita esperar a que el contenido de la ruta se cargue completamente antes de navegar a otra ruta.
+* Los Shared Layouts siguen siendo interactivos mientras se cargan los nuevos segmentos de ruta.
+
+==== Streaming con Suspense
+Además de loading.js, también se pueden crear manualmente Límites de Suspense para sus propios componentes de interfaz de usuario. El App Router admite el streaming con Suspense para los entornos de Node.js y Edge.
+
+Algunos navegadores almacenan en búfer una respuesta en streaming. Es posible que no vea la respuesta en streaming hasta que supere los 1024 bytes. Esto suele afectar solo a las aplicaciones "hola mundo", pero no a las aplicaciones reales.
+
+
+Para comprender cómo funciona el streaming en React y Next.js, es útil entender el Renderizado del Lado del Servidor (SSR) y sus limitaciones.
+
+.Con SSR, hay una serie de pasos que deben completarse antes de que un usuario pueda ver e interactuar con una página:
+
+1.- Se obtienen todos los datos de una página determinada en el servidor.
+2.- El servidor luego renderiza el HTML para la página.
+3.- El HTML, CSS y JavaScript de la página se envían al cliente.
+4.- Se muestra una interfaz de usuario no interactiva utilizando el HTML y CSS generados.
+5.- Finalmente, React hidrata la interfaz de usuario para hacerla interactiva.
+
+Estos pasos son secuenciales y bloqueantes, lo que significa que el servidor solo puede renderizar el HTML de una página una vez que se han obtenido todos los datos. Y, en el cliente, React solo puede hidratar la interfaz de usuario una vez que se ha descargado el código de todos los componentes de la página.
+
+SSR con React y Next.js ayuda a mejorar el rendimiento de carga percibido mostrando una página no interactiva al usuario lo antes posible.
+
+Sin embargo, todavía puede ser lento, ya que todas las solicitudes de datos en el servidor deben completarse antes de que la página se pueda mostrar al usuario.
+
+Los mecanismos de Streaming permiten dividir el HTML de la página en trozos más pequeños y enviar progresivamente esos trozos del servidor al cliente.
+
+Streaming funciona bien con el modelo de componentes de React porque cada componente se puede considerar un fragmento. Los componentes que tienen una prioridad más alta (por ejemplo, información del producto) o que no dependen de datos se pueden enviar primero (por ejemplo, layout), y React puede comenzar la hidratación antes. Los componentes que tienen una prioridad más baja (por ejemplo, reseñas, productos relacionados) se pueden enviar en la misma solicitud del servidor después de que se hayan obtenido sus datos.
+
+<Suspense> funciona envolviendo un componente que realiza una acción asíncrona (por ejemplo, obtener datos), mostrando una interfaz de usuario de reserva (por ejemplo, esqueleto, spinner) mientras se está realizando, y luego intercambiando su componente una vez que se completa la acción.
+
+.Un ejemplo de cómo usar Suspense con un componente de carga diferida:
+```jsx
+import { Suspense } from 'react'
+import { PostFeed, Weather } from './Components'
+ 
+export default function Posts() {
+  return (
+    <section>
+      <Suspense fallback={<p>Loading feed...</p>}>
+        <PostFeed />
+      </Suspense>
+      <Suspense fallback={<p>Loading weather...</p>}>
+        <Weather />
+      </Suspense>
+    </section>
+  )
+}
+```
+
+.Al usar Suspense, obtienes los beneficios de:
+
+* *Streaming Server Rendering* renderiza progresivamente HTML desde el servidor al cliente.
+* *Hidratación selectiva* - React prioriza qué componentes hacer interactivos primero en función de la interacción del usuario.
+
+Cuando se usa streaming, se devolverá un código de estado 200 para indicar que la solicitud se ha completado correctamente.
+
+El servidor todavía puede comunicar errores o problemas al cliente dentro del contenido transmitido en sí, por ejemplo, al usar *redirect* o *notFound*. Dado que las cabeceras de respuesta ya se han enviado al cliente, el código de estado de la respuesta no se puede actualizar. Esto no afecta al SEO.
+
+=== Manejo de errores
+
+.El archivo error.js le permite manejar de forma elegante los errores inesperados en las rutas anidadas.
+
+* Envuelve automáticamente un segmento de ruta y sus hijos anidados en un límite de error de React.
+* Crea una interfaz de usuario de error adaptada a segmentos específicos utilizando la jerarquía del sistema de archivos para ajustar la granularidad.
+* Aísla los errores a los segmentos afectados mientras mantiene el resto de la aplicación funcional.
+* Agrega funcionalidad para intentar recuperarse de un error sin tener que recargar la página completa.
+
+.Para crear una interfaz de usuario de error, añade un archivo error.js dentro de un segmento de ruta y exporta un componente React:
+```jsx
+'use client' // Error components must be Client Components
+ 
+import { useEffect } from 'react'
+ 
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error(error)
+  }, [error])
+ 
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button
+        onClick={
+          // Attempt to recover by trying to re-render the segment
+          () => reset()
+        }
+      >
+        Try again
+      </button>
+    </div>
+  )
+}
+```
+
+.Cómo funciona error.js:
+* error.js crea automáticamente un límite de error de React que envuelve un componente secundario anidado o page.tsx.
+* El componente de React exportado desde el archivo error.js se utiliza como el componente de reserva.
+* Si se produce un error dentro del límite de error, el error se contiene y se renderiza el componente de reserva.
+* Cuando el componente de error de reserva está activo, los layouts por encima del límite de error mantienen su estado y siguen siendo interactivos, y el componente de error puede mostrar funcionalidad para recuperarse del error.
+
+Un componente de error puede utilizar la función reset() para pedir al usuario que intente recuperarse del error. Cuando se ejecuta, la función intentará volver a renderizar el contenido del límite de error. Si tiene éxito, el componente de error de reserva se reemplaza por el resultado del nuevo renderizado.
+
+.Un ejemplo de cómo usar error.js:
+```jsx
+'use client'
+ 
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <div>
+      <h2>Something went wrong!</h2>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
+  )
+}
+```
+
+Los límites de error de error.js no capturan errores lanzados en los componentes layout.tsx o template.js del mismo segmento. Esta jerarquía intencional mantiene visible y funcional la interfaz de usuario importante que se comparte entre rutas hermanas (como la navegación) cuando se produce un error.
+
+.Soluciones alternativas para manejar errores en layouts y templates:
+* Para manejar errores dentro de un layout o template específico: coloca un archivo error.js en el segmento padre del layout.
+* Para manejar errores dentro del layout o template raíz: use una variación de error.js llamada global-error.tsx.
+
+El límite de error app/error.js raíz no captura errores lanzados en el componente raíz app/layout.tsx o app/template.js. 
+Para manejar errores en los componentes raíz, hay que definir un archivo global-error.tsx en el directorio raíz de la aplicación.
+
+.Por ejemplo, para manejar errores en el root layout en un archivo global-error.tsx:
+```jsx
+'use client'
+ 
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <html>
+      <body>
+        <h2>Something went wrong!</h2>
+        <button onClick={() => reset()}>Try again</button>
+      </body>
+    </html>
+  )
+}
+```
+
+==== Errores en Server Components
+
+Si se produce un error dentro de un Componente del Servidor, Next.js enviará un objeto Error al archivo error.js más cercano como la propiedad error. Este objeto de error solo incluye un mensaje genérico y la propiedad de resumen en producción, pero en desarrollo, incluye un objeto con información detallada sobre el error.
+
+=== Redirecciones
+
+.Tabla de modos de redirección:
+[cols="4* 1*"]
+|===
+| API | Propósito | Dónde | Código de Estado
+
+| redirect | Redirige al usuario después de una mutación o evento | Componentes del servidor, Acciones del servidor, Manejadores de rutas | 307 Redirección Temporal
+| permanentRedirect | Redirige al usuario después de una mutación o evento | Componentes del servidor, Acciones del servidor, Manejadores de rutas | 308 Redirección Permanente
+| useRouter | Realiza una navegación del lado del cliente | Manejadores de eventos en Componentes del cliente | -
+| redirects en next.config.tsx | Redirige una solicitud entrante basada en una ruta | Archivo next.config.tsx | 307 Redirección Temporal o 308 Redirección Permanente
+| NextResponse.redirect | Redirige una solicitud entrante basada en una condición | Middleware | Cualquiera
+|===
+
+==== La función redirect
+
+La función redirect es una API de redirección que se puede utilizar en Componentes del Servidor, Server Actions y Route Handlers para redirigir a una nueva ruta. La función redirect se puede importar desde next/navigation y se puede utilizar para redirigir a una nueva ruta.
+
+.redirect se usa a menudo después de una mutación o evento. Por ejemplo, crear una publicación:
+```jsx
+'use server'
+ 
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+ 
+export async function createPost(id: string) {
+  try {
+    // Call database
+  } catch (error) {
+    // Handle errors
+  }
+ 
+  revalidatePath('/posts') // Update cached posts
+  redirect(`/post/${id}`) // Navigate to the new post page
+}
+```
+
+.En resumen:
+
+* redirect devuelva un código de estado 307 (Redirección temporal) de forma predeterminada. Cuando se utiliza en una Acción del Servidor, devuelve un 303 (Ver Otro), que se utiliza comúnmente para redirigir a una página de éxito como resultado de una solicitud POST.
+* redirect lanza internamente un error, por lo que debe llamarse fuera de bloques try/catch.
+* redirect se puede llamar en Componentes del Cliente durante el proceso de renderizado, pero no en controladores de eventos. En su lugar, se puede utilizar el hook useRouter.
+* redirect también acepta URLs absolutas y se puede utilizar para redirigir a enlaces externos.
+* Si se quiere redirigir antes del proceso de renderizado, utilice next.config.tsx o Middleware.
+
+==== La función permanentRedirect
+
+La función permanentRedirect te permite redirigir permanentemente al usuario a otra URL. Puedes llamar a permanentRedirect en Componentes del Servidor, Route Handlers y Server Actions.
+
+.Se suele utilizar permanentRedirect después de una mutación o evento que cambia la URL canónica de una entidad, como actualizar la URL de perfil de un usuario después de cambiar su nombre de usuario
+```jsx
+'use server'
+ 
+import { permanentRedirect } from 'next/navigation'
+import { revalidateTag } from 'next/cache'
+ 
+export async function updateUsername(username: string, formData: FormData) {
+  try {
+    // Call database
+  } catch (error) {
+    // Handle errors
+  }
+ 
+  revalidateTag('username') // Update all references to the username
+  permanentRedirect(`/profile/${username}`) // Navigate to the new user profile
+}
+```
+
+.En resumen:
+* permanentRedirect devuelve un código de estado 308 (redirección permanente) por defecto.
+* permanentRedirect también acepta URLs absolutas y se puede utilizar para redirigir a enlaces externos.
+* Si se quiere redirigir antes del proceso de renderizado, hay que usar next.config.tsx o Middleware.
+
+==== El hook useRouter
+
+El hook useRouter es una API de navegación que proporciona acceso a la ruta actual y a los métodos de navegación. Se puede utilizar en Componentes de Cliente para acceder a la ruta actual y a los métodos de navegación. Si no es necesario navegar programáticamente, es preferible utilizar el componente <Link> en lugar del hook useRouter.
+
+.Si necesitas redirigir dentro de un controlador de eventos en un Componente de Cliente, puedes utilizar el método push del hook useRouter. Por ejemplo:
+```jsx
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+ 
+export default function Page() {
+  const router = useRouter()
+ 
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      Dashboard
+    </button>
+  )
+}
+```
+
+==== Redirecciones en next.config.tsx
+Las redirecciones en el archivo next.config.tsx permiten redirigir una ruta de solicitud entrante a una ruta de destino diferente. Esto es útil cuando cambias la estructura de URL de las páginas o tienes una lista de redirecciones que se conocen de antemano.
+
+redirects admite la coincidencia de ruta, header, cookie y query, lo que te da la flexibilidad de redirigir a los usuarios en función de una solicitud entrante.
+
+.Para usar redirecciones, añade la opción a tu archivo next.config.tsx:
+```jsx
+module.exports = {
+  async redirects() {
+    return [
+      // Basic redirect
+      {
+        source: '/about',
+        destination: '/',
+        permanent: true,
+      },
+      // Wildcard path matching
+      {
+        source: '/blog/:slug',
+        destination: '/news/:slug',
+        permanent: true,
+      },
+    ]
+  },
+}
+```
+
+.En resumen:
+* redirects puede devolver un código de estado 307 (Redirección temporal) o 308 (Redirección permanente) con la opción permanent.
+* redirects podría tener un límite en las plataformas. Por ejemplo, algunas plataformas pueden tener límite de 1.024 redirecciones. Para gestionar un gran número de redirecciones (1000+), considera crear una solución personalizada utilizando Middleware. 
+* redirects se ejecuta antes de Middleware.
+
+==== NextResponse.redirect en Middleware
+
+Middleware nos permite ejecutar código antes de que se complete una solicitud. Luego, en función de la solicitud entrante, redirigir a una URL diferente utilizando NextResponse.redirect. Esto es útil si quieres redirigir a los usuarios en función de una condición (por ejemplo, autenticación, gestión de sesiones, etc.) o tienes un gran número de redirecciones. Middleware se ejecuta después de las redirecciones en next.config.tsx y antes del renderizado.
+
+.Para redirigir en Middleware, añade la función redirect a tu Middleware en un archivo middleware.js:
+```jsx
+import { NextResponse, NextRequest } from 'next/server'
+import { authenticate } from 'auth-provider'
+ 
+export function middleware(request: NextRequest) {
+  const isAuthenticated = authenticate(request)
+ 
+  // If the user is authenticated, continue as normal
+  if (isAuthenticated) {
+    return NextResponse.next()
+  }
+ 
+  // Redirect to login page if not authenticated
+  return NextResponse.redirect(new URL('/login', request.url))
+}
+ 
+export const config = {
+  matcher: '/dashboard/:path*',
+}
+```
+
+==== Gestión de redirecciones a gran escala 
+
+Si tienes un gran número de redirecciones (1000+), considera crear una solución personalizada utilizando Middleware. Esto te permite gestionar redirecciones a gran escala de forma eficiente y sin afectar el rendimiento de tu aplicación.
+
+.Para hacer ésto:
+* Crear y almacenar un mapa de redirecciones
+* Optimizar el rendimiento de la búsqueda de datos
+
+.Un ejemplo de cómo crear un mapa de redirecciones en un archivo redirects.json:
+```json
+{
+  "/old": {
+    "destination": "/new",
+    "permanent": true
+  },
+  "/blog/post-old": {
+    "destination": "/blog/post-new",
+    "permanent": true
+  }
+}
+```
+
+.Luego, en tu Middleware, puedes cargar el archivo JSON y buscar la ruta de solicitud entrante en el mapa de redirecciones:
+```jsx
+import { NextResponse, NextRequest } from 'next/server'
+import { get } from '@vercel/edge-config'
+ 
+type RedirectEntry = {
+  destination: string
+  permanent: boolean
+}
+ 
+export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+  const redirectData = await get(pathname)
+ 
+  if (redirectData && typeof redirectData === 'string') {
+    const redirectEntry: RedirectEntry = JSON.parse(redirectData)
+    const statusCode = redirectEntry.permanent ? 308 : 307
+    return NextResponse.redirect(redirectEntry.destination, statusCode)
+  }
+ 
+  // No redirect found, continue without redirecting
+  return NextResponse.next()
+}
+```
+
+=== Route Groups
+En el directorio de la aplicación, los directorios anidados se asignan normalmente a rutas URL. Sin embargo, puedes marcar una carpeta como Grupo de Rutas para evitar que el directorio se incluya en la ruta de la URL.
+
+Esto permite organizar segmentos de ruta y archivos de proyecto en grupos lógicos sin afectar la estructura de la ruta de la URL.
+
+.Los route groups son útiles para:
+* Organizar archivos de proyecto en grupos lógicos.
+* Evitar que los directorios anidados se incluyan en la ruta de la URL.
+
+Para organizar rutas sin afectar la URL, se crea un grupo para mantener juntas las rutas relacionadas. Los directorios entre paréntesis se omitirán de la URL (por ejemplo, (marketing) o (shop)).
+
+.Por ejemplo, para organizar rutas de marketing y tienda en grupos:
+```file
+pages/
+├── (marketing)
+│   ├── about
+│       └── page.tsx
+│   ├── contact
+│       └── page.tsx
+└── (shop)
+    ├── products
+        └── page.tsx
+```
+.En resumen:
+* El nombre de los grupos de rutas no tiene ningún significado especial aparte de la organización. No afectan a la ruta de la URL.
+* Las rutas que incluyen un grupo de rutas no deben resolverse a la misma ruta de URL que otras rutas. Por ejemplo, dado que los grupos de rutas no afectan a la estructura de la URL, (marketing)/about/page.tsx y (shop)/about/page.tsx se resolverían a /about y causarían un error.
+* Si utilizas varios layouts raíz sin un archivo layout.tsx de nivel superior, tu archivo de página de inicio.js debe definirse en uno de los grupos de rutas. Por ejemplo: app/(marketing)/page.tsx.
+* Navegar entre varios layouts raíz provocará una carga completa de la página (en lugar de una navegación del lado del cliente). Por ejemplo, navegar desde /cart que utiliza app/(shop)/layout.tsx a /blog que utiliza app/(marketing)/layout.tsx provocará una carga completa de la página. Esto solo se aplica a varios layouts raíz.
+
+=== Rutas dinámicas
+
+Las rutas dinámicas permiten crear rutas que se adaptan a diferentes URL sin tener que crear una ruta para cada URL. Esto es útil para crear rutas que contienen parámetros variables, como rutas de blog, rutas de productos o rutas de usuario.
+
+Un Segmento Dinámico se puede crear envolviendo el nombre de una carpeta entre corchetes: [nombreCarpeta]. Por ejemplo, [id] o [slug].
+
+Los Segmentos Dinámicos se pasan como la propiedad params a las funciones layout, page, route y generateMetadata.
+
+.Por ejemplo, un blog podría incluir la siguiente ruta app/blog/[slug]/page.tsx donde [slug] es el Segmento Dinámico para las publicaciones de blog.
+```jsx
+export default function Page({ params }: { params: { slug: string } }) {
+  return <div>My Post: {params.slug}</div>
+}
+```
+
+==== Generación estática de parámetros
+
+La función generateStaticParams se puede utilizar en combinación con segmentos de ruta dinámicos para generar rutas estáticamente en el momento de la compilación en lugar de a pedido en el momento de la solicitud.
+
+.Por ejemplo, para generar rutas estáticas para publicaciones de blog en app/blog/[slug]/page.tsx:
+```jsx
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+```
+
+El principal beneficio de la función generateStaticParams es su recuperación inteligente de datos. Si el contenido se obtiene dentro de la función generateStaticParams utilizando una solicitud fetch, las solicitudes se almacenan en caché automáticamente. Esto significa que una solicitud fetch con los mismos argumentos en varios generateStaticParams, Layouts y Pages solo se realizará una vez, lo que reduce los tiempos de compilación.
+
+Los Segmentos Dinámicos se pueden extender para capturar todos los segmentos subsiguientes añadiendo una elipsis dentro de los corchetes [...nombreDirectorio].
+
+Por ejemplo, app/shop/[...slug]/page.tsx coincidirá con /shop/clothes, pero también con /shop/clothes/tops, /shop/clothes/tops/t-shirts, y así sucesivamente.
+
+==== Segmentos Catch-all
+Dynamic Segments can be extended to catch-all subsequent segments by adding an ellipsis inside the brackets [...folderName].
+Los Segmentos Dinámicos se pueden extender para capturar todos los segmentos subsiguientes añadiendo una elipsis dentro de los corchetes [...nombreDirectorio].
+
+Por ejemplo, app/shop/[...slug]/page.tsx coincidirá con /shop/clothes, pero también con /shop/clothes/tops, /shop/clothes/tops/t-shirts, y así sucesivamente.
+
+Los Segmentos Catch-all se pueden hacer opcionales incluyendo el parámetro entre corchetes dobles: [[...nombreDirectorio]].
+
+Por ejemplo, app/shop/[[...slug]]/page.tsx también coincidirá con /shop, además de /shop/clothes, /shop/clothes/tops, /shop/clothes/tops/t-shirts.
+
+La diferencia entre los segmentos catch-all y los segmentos catch-all opcionales es que con los opcionales, también se empareja la ruta sin el parámetro (/shop en el ejemplo anterior).
+
+.Por ejemplo, para crear una ruta catch-all opcional en app/shop/[[...slug]]/page.tsx:
+```jsx
+export default function Page({ params }: { params: { slug: string[] } }) {
+  return <div>Shop: {params.slug.join('/')}</div>
+}
+```
+
+.Tenemos que tener en cuenta los tipos de datos que se pueden utilizar en los Segmentos Dinámicos en la siguiente tabla:
+[cols="2,2,2"]
+|===
+| Segmento Dinámico | Ruta | Parámetros
+| app/shop/[[...slug]]/page.tsx | /shop | {}
+| app/shop/[[...slug]]/page.tsx | /shop/a | { slug: ['a'] }
+| app/shop/[[...slug]]/page.tsx | /shop/a/b | { slug: ['a', 'b'] }
+| app/shop/[[...slug]]/page.tsx | /shop/a/b/c | { slug: ['a', 'b', 'c'] }
+|===
+
+=== Rutas paralelas
+
+Las rutas paralelas te permiten renderizar simultáneamente o condicionalmente una o más páginas dentro del mismo layout. Son útiles para secciones altamente dinámicas de una aplicación, como paneles o dashboards, donde se necesita mostrar varias páginas al mismo tiempo.
+
+==== Slots
+
+Las rutas paralelas se crean utilizando *slots* con la convención *@nombreDirectorio*. Los slots se pasan como props al layout principal compartido. Por ejemplo, la siguiente estructura de archivos define dos slots: @analytics y @team.
+
+.Para el ejemplo anterior, el componente en app/layout.tsx ahora acepta las props de los slots @analytics y @team, y puede renderizarlos en paralelo junto con la prop children:
+```jsx
+export default function Layout({
+  children,
+  team,
+  analytics,
+}: {
+  children: React.ReactNode
+  analytics: React.ReactNode
+  team: React.ReactNode
+}) {
+  return (
+    <>
+      {children}
+      {team}
+      {analytics}
+    </>
+  )
+}
+```
+
+En el ejemplo anterior, el componente Layout renderiza el contenido de children, team y analytics en paralelo. Esto significa que el contenido de team y analytics se renderiza simultáneamente con el contenido de children. La prop children es un slot implícito que no necesita ser mapeado a una carpeta. Esto significa que app/page.tsx es equivalente a app/@children/page.tsx.
+
+==== Estado activo y navegación
+
+.Por defecto, Next.js realiza un seguimiento del estado activo (o subpágina) para cada slot. Sin embargo, el contenido renderizado dentro de un slot dependerá del tipo de navegación:
+
+* *Soft Navigation:* Durante la navegación del lado del cliente, Next.js realizará un renderizado parcial, cambiando la subpágina dentro del slot, mientras mantiene las subpáginas activas de los otros slots, incluso si no coinciden con la URL actual.
+* *Hard Navigation:* Después de una carga completa de la página (actualización del navegador), Next.js no puede determinar el estado activo para los slots que no coinciden con la URL actual. En su lugar, renderizará un archivo default.js para los slots no coincidentes, o 404 si default.js no existe.
+
+Se puede definir un archivo default.js para renderizar como un fallback para los slots no coincidentes durante la carga inicial o la recarga de la página completa.
+
+.Considera la siguiente estructura de carpetas. El slot @team tiene una página /settings, pero @analytics no.
+```file
+app/
+├── @analytics
+│   └── settings
+│       └── page.tsx
+├── @team
+│   └── default.js
+|   └── page.tsx
+├── default.js
+├── layout.tsx
+└── page.tsx
+```
+Cuando se navega a /settings, el slot @team renderizará la página /settings mientras mantiene la página activa actual para el slot @analytics. Al recargar, Next.js renderizará un default.js para @analytics. Si default.js no existe, se renderizará un 404 en su lugar.
+
+Además, dado que children es un slot implícito, también necesitas crear un archivo default.js para renderizar un fallback para children cuando Next.js no puede recuperar el estado activo de la página principal.
+
+==== useSelectedLayoutSegment(s)
+Ambas funciones useSelectedLayoutSegment y useSelectedLayoutSegments aceptan un parámetro parallelRoutesKey, que te permite leer el segmento de ruta activo dentro de un slot.
+
+.Cuando un usuario navega a app/@auth/login (o /login en la barra de direcciones), loginSegment será igual a la cadena "login".
+```jsx
+'use client'
+ 
+import { useSelectedLayoutSegment } from 'next/navigation'
+ 
+export default function Layout({ auth }: { auth: React.ReactNode }) {
+  const loginSegment = useSelectedLayoutSegment('auth')
+  // ...
+}
+```
+
+==== Ejemplos de uso de rutas paralelas
+
+.Podemos utilizar rutas paralelas en casos de uso como:
+* Rutas dicionales
+* Grupos de tabs
+* Modales
+
+.Rutas condicionales:
+```jsx
+import { checkUserRole } from '@/lib/auth'
+ 
+export default function Layout({
+  user,
+  admin,
+}: {
+  user: React.ReactNode
+  admin: React.ReactNode
+}) {
+  const role = checkUserRole()
+  return <>{role === 'admin' ? admin : user}</>
+}
+```
+Usamos las rutas paralelas para renderizar condicionalmente rutas basadas en ciertas condiciones, como el rol de usuario. Por ejemplo, para renderizar una página de panel diferente para los roles /admin o /user
+
+.Grupo de tabs:
+```jsx
+import Link from 'next/link'
+ 
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <nav>
+        <Link href="/page-views">Page Views</Link>
+        <Link href="/visitors">Visitors</Link>
+      </nav>
+      <div>{children}</div>
+    </>
+  )
+}
+```
+
+En el ejemplo anterior añadimos un layout dentro de un slot para permitir a los usuarios navegar por el slot de forma independiente. Esto es útil para crear tabs.
+
+===== Modales
+.Las rutas paralelas se pueden utilizar junto con las rutas de intercepción para crear modales. Esto te permite resolver desafíos comunes al construir modales, como:
+* Hacer el contenido del modal compartible a través de una URL.
+* Preservar el contexto cuando se actualiza la página, en lugar de cerrar el modal.
+* Cerrar el modal en la navegación hacia atrás en lugar de ir a la ruta anterior.
+* Reabrir el modal en la navegación hacia adelante.
+
+En el ejemplo de un modal hay varios pasos a seguir:
+
+.Primero creamos una página con un componente de Login:
+```jsx
+import { Login } from '@/app/ui/login'
+ 
+export default function Page() {
+  return <Login />
+}
+```
+
+.Dentro del slot @auth, interceptamos la ruta /login actualizando la carpeta /(.)login. Importamos el componente <Modal> y sus hijos en el archivo /(.)login/page.tsx:
+```jsx
+import { Modal } from '@/app/ui/modal'
+import { Login } from '@/app/ui/login'
+ 
+export default function Page() {
+  return (
+    <Modal>
+      <Login />
+    </Modal>
+  )
+}
+```
+
+.Para abrir el modal, pasamos el slot @auth como una prop al layout principal y lo renderizamos junto con la prop children.
+```jsx
+import Link from 'next/link'
+ 
+export default function Layout({
+  auth,
+  children,
+}: {
+  auth: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <>
+      <nav>
+        <Link href="/login">Open modal</Link>
+      </nav>
+      <div>{auth}</div>
+      <div>{children}</div>
+    </>
+  )
+}
+```
+Cuando el usuario hace clic en el <Link>, el modal se abrirá en lugar de navegar a la página /login. Sin embargo, al actualizar o cargar inicialmente, navegar a /login llevará al usuario a la página principal de inicio de sesión.
+
+.Para cerrar el modal, puedes utilizar el hook useRouter para navegar a la página anterior. En app/ui/modal.tsx:
+```jsx
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+ 
+export function Modal({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+ 
+  return (
+    <>
+      <button
+        onClick={() => {
+          router.back()
+        }}
+      >
+        Close modal
+      </button>
+      <div>{children}</div>
+    </>
+  )
+}
+```
+
+Cuando se utiliza el componente Link para navegar lejos de una página que ya no debería renderizar el slot @auth, se utiliza una ruta catch-all que devuelve null.
+
+.En el modal se usa Link para cerrar el modal y volver a la página anterior. En app/ui/modal.tsx:
+```jsx
+import Link from 'next/link'
+ 
+export function Modal({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Link href="/">Close modal</Link>
+      <div>{children}</div>
+    </>
+  )
+}
+```
+
+.En app/@auth/[...catchAll]/page.tsx:
+```jsx
+export default function Page() {
+  return null
+}
+```
+
+=== Rutas de intercepción
+
+La interceptación de rutas nos permite cargar una ruta desde otra parte de tu aplicación dentro del layout actual. Este paradigma de enrutamiento puede ser útil cuando quieres mostrar el contenido de una ruta sin que el usuario cambie a un contexto diferente.
+
+.Las rutas de intercepción se crean utilizando las reglas:
+* (.) Para coincidir con segmentos en el mismo nivel
+* (..) Para coincidir con segmentos un nivel por encima
+* (..)(..) Para coincidir con segmentos dos niveles por encima
+* (...) Para coincidir con segmentos desde el directorio raíz de la aplicación
+
+.Por ejemplo, para interceptar la ruta /settings en app/@team/page.tsx:
+```file
+app/
+├── team
+│   └── page.tsx
+├── (..)user
+│   └── page.js
+```
+
+=== Route Handlers
+
+Los Route Handlers son funciones que se utilizan para manejar solicitudes de API en el servidor. Se pueden definir exportando una función predeterminada desde un archivo route.tsx en un segmento de ruta.
+
+Los Route Handlers solo están disponibles dentro del directorio app. Son el equivalente de las Rutas de API dentro del directorio de páginas, lo que significa que no es necesario utilizar Rutas de API y Route Handlers juntos.
+
+.Route Handlers se definen en /app/api/route.tsx:
+```jsx
+export const dynamic = 'force-dynamic' // defaults to auto
+export async function GET(request: Request) {}
+export async function POST(request: Request) {}
+export async function PUT(request: Request) {}
+export async function DELETE(request: Request) {}
+```
+
+Los Route Handlers se pueden anidar dentro del directorio app, al igual que page.js y layout.tsx. Pero no puede haber un archivo route.js en el mismo nivel de segmento de ruta que page.js.
+
+Los métodos HTTP compatibles son: GET, POST, PUT, PATCH, DELETE, HEAD y OPTIONS. Si se llama a un método no compatible, Next.js devolverá una respuesta 405 Method Not Allowed.
+
+.Los Route Handlers se almacenan en caché de forma predeterminada cuando se utiliza el método GET con el objeto Response. En app/items/route.tsx:
+```jsx
+export async function GET() {
+  const res = await fetch('https://data.mongodb-api.com/...', {
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+  })
+  const data = await res.json()
+ 
+  return Response.json({ data })
+}
+```
+.Puedes optar por no almacenar en caché si:
+* Usas el objeto Request con el método GET.
+* Usas cualquiera de los otros métodos HTTP.
+* Usas Funciones Dinámicas como cookies y cabeceras.
+* Tienes las Opciones de Configuración de Segmento en modo dinámico.
+
+=== Middleware
+Un Middleware es una función que se ejecuta antes de que se complete una solicitud. Luego, en función de la solicitud entrante, puedes modificar la respuesta reescribiendo, redirigiendo, modificando las cabeceras de la solicitud o respuesta, o respondiendo directamente. El Middleware se ejecuta antes de que se emparejen el contenido en caché y las rutas. 
+
+.Algunos escenarios comunes donde el Middleware es particularmente efectivo incluyen:
+* *Autenticación y Autorización:* Asegúrate de la identidad del usuario y comprueba las cookies de sesión antes de conceder acceso a páginas o rutas de API específicas.
+* *Redirecciones en el Servidor:* Redirige a los usuarios a nivel de servidor en función de ciertas condiciones (por ejemplo, localización, rol de usuario).
+* *Reescritura de Rutas:* Admite pruebas A/B, lanzamientos de funciones o rutas heredadas reescribiendo dinámicamente rutas a rutas de API o páginas en función de las propiedades de la solicitud.
+* *Detección de Bots:* Protege tus recursos detectando y bloqueando el tráfico de bots.
+* *Registro y Análisis:* Captura y analiza los datos de la solicitud para obtener información antes de procesarlos por la página o la API.
+* *Activación de Funciones:* Habilita o deshabilita funciones dinámicamente para lanzamientos de funciones o pruebas sin problemas.
+
+.Para crear un Middleware, exporta una función middleware desde un archivo middleware.tsx 
+```jsx
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+ 
+// This function can be marked `async` if using `await` inside
+export function middleware(request: NextRequest) {
+  return NextResponse.redirect(new URL('/home', request.url))
+}
+ 
+// See "Matching Paths" below to learn more
+export const config = {
+  matcher: '/about/:path*',
+}
+```
+
+El Middleware se invocará para cada ruta en tu proyecto. Por lo tanto, es crucial utilizar los matchers para apuntar o excluir con precisión rutas específicas. 
+
+.El siguiente es el orden de ejecución:
+
+* headers de next.config.tsx
+* redirecciones de next.config.tsx
+* Middleware (redirecciones, reescrituras, etc.)
+* beforeFiles (reescrituras) de next.config.tsx
+* Rutas del sistema de archivos (public/, _next/static/, pages/, app/, etc.)
+* afterFiles (reescrituras) de next.config.tsx
+* Rutas Dinámicas (/blog/[slug])
+* fallback (reescrituras) de next.config.tsx
+
+== Data Fetching
+
+Data fetching es una parte fundamental de cualquier aplicación. Esta página explica cómo puedes obtener, almacenar en caché y volver a validar datos en React y Next.js.
+
+.Hay cuatro formas de obtener datos:
+
+* En el servidor, con fetch
+* En el servidor, con bibliotecas de terceros
+* En el cliente, a través de un Route Handler
+* En el cliente, con bibliotecas de terceros.
+
+Next.js extiende la API web fetch nativa para permitirte configurar el comportamiento de almacenamiento en caché y revalidación para cada solicitud de fetch en el servidor. React extiende fetch para memoizar automáticamente las solicitudes de fetch mientras renderiza un árbol de componentes de React.
+
+.Se puede utilizar fetch con async/await en Componentes del Servidor, en Route Handlers y en Acciones del Servidor.
+* Componentes del Servidor
+* Route Handlers 
+* Server Actions.
+
+.Por ejemplo, para obtener datos en un componente del servidor:
+```jsx
+async function getData() {
+  const res = await fetch('https://api.example.com/...')
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+ 
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+ 
+  return res.json()
+}
+ 
+export default async function Page() {
+  const data = await getData()
+ 
+  return <main></main>
+}
+```
+
+.En resumen:
+* Next.js proporciona funciones útiles que puedes necesitar al obtener datos en Componentes del Servidor, como cookies y cabeceras. Estas funciones harán que la ruta se renderice de forma dinámica, ya que dependen de la información del tiempo de solicitud.
+* En los Route Handlers, las solicitudes de fetch no se memorizan, ya que los Route Handlers no forman parte del árbol de componentes de React.
+* En las Server Actions, las solicitudes de fetch no se almacenan en caché (por defecto, cache: no-store).
+* Para usar async/await en un Componente del Servidor con TypeScript, necesitarás usar TypeScript 5.1.3 o superior y @types/react 18.2.8 o superior.
+
+=== Server Actions y Mutations
+
+Server Actions son funciones asíncronas que se ejecutan en el servidor. Se pueden utilizar en Componentes del Servidor y del Cliente para manejar envíos de formularios y mutaciones de datos en aplicaciones Next.js.
+
+Una Server Action se puede definir con la directiva React *"use server"*. Puedes colocar la directiva en la parte superior de una función asíncrona para marcar la función como una Server Action, o en la parte superior de un archivo separado para marcar todas las exportaciones de ese archivo como Server Actions.
+
+.Los Componentes del Servidor pueden usar la directiva "use server" en el nivel de función o de módulo. Para incrustar una Server Action, añade "use server" en la parte superior del cuerpo de la función:
+```jsx
+// Server Component
+export default function Page() {
+  // Server Action
+  async function create() {
+    'use server'
+ 
+    // ...
+  }
+ 
+  return (
+    // ...
+  )
+}
+```
+
+Los Componentes del Cliente solo pueden importar acciones que utilicen la directiva "use server" a nivel de módulo. Para llamar a una Server Action en un Componente del Cliente, crea un nuevo archivo y añade la directiva "use server" en la parte superior. Todas las funciones dentro del archivo se marcarán como Server Actions que se pueden reutilizar en Componentes del Cliente y del Servidor.
+
+.Podemos tener un archivo server-actions.tsx con varias Server Actions:
+```jsx
+// server-actions.tsx
+'use server'
+
+export async function create() {
+  // ...
+}
+
+export async function update() {
+  // ...
+}
+
+export async function remove() {
+  // ...
+}
+```
+
+.En un Componente del Cliente, se pueden importar y llamar a las Server Actions definidas en server-actions.tsx:
+```jsx
+// Client Component
+import { create, update, remove } from './server-actions'
+
+export function Button() {
+  return (
+    // ...
+  )
+}
+```
+.Puedes pasar una Server Action a un Componente del Cliente como una propiedad:
+```jsx
+// Client Component
+<ClientComponent updateItem={updateItem} />
+
+// client-component.tsx
+export default function ClientComponent({ updateItem }) {
+  return (
+    // ...
+  )
+}
+```
+
+.Las Server Actions se pueden invocar utilizando el atributo action en un elemento <form>:
+* Los Server Components admiten la mejora progresiva de forma predeterminada, lo que significa que el formulario se enviará incluso si JavaScript aún no se ha cargado o está deshabilitado.
+* En los Componentes del Cliente, los formularios que invocan Server Actions encolarán las presentaciones si JavaScript aún no se ha cargado, priorizando la hidratación del cliente.
+* Después de la hidratación, el navegador no se actualiza al enviar el formulario.
+* Las Server Actions no se limitan a <form> y se pueden invocar desde controladores de eventos, useEffect, bibliotecas de terceros y otros elementos de formulario como <button>.
+* Las Server Actions se integran con la arquitectura de almacenamiento en caché y revalidación de Next.js. Cuando se invoca una acción, Next.js puede devolver tanto la interfaz de usuario actualizada como los nuevos datos en una sola ida y vuelta del servidor.
+* Las acciones utilizan el método POST, y solo este método HTTP puede invocarlas.
+* Los argumentos y el valor de retorno de las Server Actions deben ser serializables por React. 
+* Las Server Actions son funciones. Esto significa que se pueden reutilizar en cualquier parte de tu aplicación.
+* Las Server Actions heredan el tiempo de ejecución de la página o el layout en el que se utilizan.
+* Las Server Actions heredan la Configuración del Segmento de Ruta de la página o el layout en el que se utilizan, incluidos campos como maxDuration.
+
+==== Server Actions con Formularios
+React extiende el elemento HTML <form> para permitir que las Server Actions se invoquen con la propiedad action.
+
+Cuando se invoca en un formulario, la acción recibe automáticamente el objeto FormData. No es necesario utilizar React useState para gestionar los campos, en su lugar, se puede extraer los datos utilizando los métodos nativos de FormData.
+
+.Por ejemplo, para invocar una Server Action en un formulario:
+```jsx
+export default function Page() {
+  async function createInvoice(formData: FormData) {
+    'use server'
+ 
+    const rawFormData = {
+      customerId: formData.get('customerId'),
+      amount: formData.get('amount'),
+      status: formData.get('status'),
+    }
+ 
+    // mutate data
+    // revalidate cache
+  }
+ 
+  return <form action={createInvoice}>...</form>
+}
+```
+
+==== Usos comunes de Data Fetching
+
+.Data Fetching secuencial:
+```jsx
+// ...
+ 
+async function Playlists({ artistID }: { artistID: string }) {
+  // Wait for the playlists
+  const playlists = await getArtistPlaylists(artistID)
+ 
+  return (
+    <ul>
+      {playlists.map((playlist) => (
+        <li key={playlist.id}>{playlist.name}</li>
+      ))}
+    </ul>
+  )
+}
+ 
+export default async function Page({
+  params: { username },
+}: {
+  params: { username: string }
+}) {
+  // Wait for the artist
+  const artist = await getArtist(username)
+ 
+  return (
+    <>
+      <h1>{artist.name}</h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Playlists artistID={artist.id} />
+      </Suspense>
+    </>
+  )
+}
+```
+
+.Data Fetching paralelo:
+```jsx
+import Albums from './albums'
+ 
+async function getArtist(username: string) {
+  const res = await fetch(`https://api.example.com/artist/${username}`)
+  return res.json()
+}
+ 
+async function getArtistAlbums(username: string) {
+  const res = await fetch(`https://api.example.com/artist/${username}/albums`)
+  return res.json()
+}
+ 
+export default async function Page({
+  params: { username },
+}: {
+  params: { username: string }
+}) {
+  // Initiate both requests in parallel
+  const artistData = getArtist(username)
+  const albumsData = getArtistAlbums(username)
+ 
+  // Wait for the promises to resolve
+  const [artist, albums] = await Promise.all([artistData, albumsData])
+ 
+  return (
+    <>
+      <h1>{artist.name}</h1>
+      <Albums list={albums}></Albums>
+    </>
+  )
+}
+```
+
+.Precarga de datos:
+```jsx
+import { getItem } from '@/utils/get-item'
+ 
+export const preload = (id: string) => {
+  // void evaluates the given expression and returns undefined
+  // https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/void
+  void getItem(id)
+}
+export default async function Item({ id }: { id: string }) {
+  const result = await getItem(id)
+  // ...
+}
+
+import Item, { preload, checkIsAvailable } from '@/components/Item'
+ 
+export default async function Page({
+  params: { id },
+}: {
+  params: { id: string }
+}) {
+  // starting loading item data
+  preload(id)
+  // perform another asynchronous task
+  const isAvailable = await checkIsAvailable()
+ 
+  return isAvailable ? <Item id={id} /> : null
+}
+```
+
+== Renderizado
+
+=== Diferencias entre Client Components y Server Components en Next.js
+
+En Next.js, los "client components" y "server components" representan dos paradigmas diferentes para la renderización y manejo de componentes en la aplicación, especialmente relevante en la versión 13 y posteriores, que introducen los Server Components. Aquí te explico las diferencias principales entre ambos:
+
+==== Client Components (Componentes del Cliente)
+
+1. **Ejecución**: Se ejecutan en el navegador del cliente.
+2. **Interactividad**: Son necesarios para la interactividad en la aplicación. Todo lo relacionado con eventos de usuario (clicks, formularios, etc.) debe manejarse en client components.
+3. **Estado Local y Efectos**: Utilizan hooks de React como `useState`, `useEffect`, etc., que permiten manejar estado local y efectos secundarios.
+4. **Rendering**: Estos componentes se pueden renderizar inicialmente en el servidor (Server-Side Rendering) o en el cliente (Client-Side Rendering), pero siempre tendrán que ser ejecutados en el navegador para manejar la interactividad.
+5. **Transporte de JavaScript**: Todo el código de los client components se envía al cliente, lo que puede aumentar el tamaño del bundle y afectar el tiempo de carga de la página.
+
+==== Server Components (Componentes del Servidor)
+
+1. **Ejecución**: Se ejecutan en el servidor.
+2. **Interactividad**: No manejan interactividad directamente. Están pensados principalmente para la lógica de presentación y la generación de HTML.
+3. **Estado y Efectos**: No utilizan hooks como `useState` o `useEffect`. Pueden usar hooks específicos para el servidor como `useServerEffect` (ficticio para ilustración), pero no pueden manejar interactividad del cliente.
+4. **Rendering**: Se renderizan completamente en el servidor y el HTML generado se envía al cliente. No se envía JavaScript adicional al cliente para estos componentes, lo que puede reducir el tamaño del bundle y mejorar el rendimiento de la página.
+5. **Composición**: Pueden incluir y renderizar otros server components y client components. La idea es que los server components gestionen la lógica pesada del servidor y deleguen la interactividad a los client components.
+
+==== Uso Combinado
+
+- **Optimización**: Utilizando una combinación de server components para la lógica pesada del servidor y client components para la interactividad, se puede optimizar la carga y el rendimiento de la aplicación.
+- **Separación de responsabilidades**: Facilita la separación de responsabilidades, donde los server components se encargan de la generación de contenido estático o dinámico en el servidor y los client components manejan la interacción del usuario.
+
+==== Ejemplo Básico
+
+```jsx
+// Server Component (MyServerComponent.jsx)
+export default function MyServerComponent() {
+  const data = fetchDataFromServer(); // Imagina que esta función obtiene datos del servidor
+  return (
+    <div>
+      <h1>Datos del Servidor</h1>
+      <p>{data}</p>
+    </div>
+  );
+}
+
+// Client Component (MyClientComponent.jsx)
+'use client';
+
+import { useState } from 'react';
+
+export default function MyClientComponent() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <div>
+      <h1>Contador</h1>
+      <button onClick={() => setCount(count + 1)}>Incrementar</button>
+      <p>Cuenta: {count}</p>
+    </div>
+  );
+}
+```
+
+.En esta tabla se resumen las diferencias entre roles de Componentes del Servidor y del Cliente:
+[cols="1,1,1", options="header"]
+|===
+| ¿Qué necesitas hacer? | Componente del servidor | Componente del cliente
+
+| Obtener datos                    | Sí | No
+| Acceder a recursos del backend directamente | Sí | No
+| Mantener información sensible en el servidor (tokens de acceso, claves API, etc.) | Sí | No
+| Mantener grandes dependencias en el servidor / Reducir JavaScript en el lado del cliente | Sí | No
+| Agregar interactividad y listeners de eventos (onClick(), onChange(), etc.) | No | Sí
+| Usar Estado y Efectos de Ciclo de Vida (useState(), useReducer(), useEffect(), etc.) | No | Sí
+| Usar APIs exclusivas del navegador | No | Sí
+| Usar hooks personalizados que dependan del estado, efectos, o APIs exclusivas del navegador | No | Sí
+| Usar componentes de clase de React | No | Sí
+|===
+
+
+=== Entornos de ejecución de Client Components y Server Components
+
+==== Node.js Runtime
+EL uso de Node.js te da acceso a todas las API de Node.js y a todos los paquetes npm que dependen de ellas. Sin embargo, no es tan rápido de iniciar como las rutas que utilizan el tiempo de ejecución de Edge.
+
+El despliegue de una aplicación Next.js en un servidor Node.js requerirá gestionar, escalar y configurar tu infraestructura. 
+
+==== Edge Runtime
+En Next.js, el ligero entorno de ejecución de Edge es un subconjunto de las API de Node.js disponibles.
+
+El entorno de ejecución de Edge es ideal si necesitas entregar contenido dinámico y personalizado con baja latencia utilizando funciones pequeñas y simples. La velocidad del entorno de ejecución de Edge se debe a su uso mínimo de recursos, pero esto puede ser limitante en muchos escenarios.
+
+Por ejemplo, el código ejecutado en el entorno de ejecución de Edge en algunas plataformas no puede exceder entre 1 MB y 4 MB, este límite incluye paquetes importados, fuentes y archivos, y variará dependiendo de tu infraestructura de despliegue. Además, el entorno de ejecución de Edge no soporta todas las API de Node.js, lo que significa que algunos paquetes npm pueden no funcionar. Por ejemplo, "Module not found: Can't resolve 'fs'" u otros errores similares. Recomendamos utilizar el entorno de ejecución de Node.js si necesitas utilizar estas API o paquetes.
+
+
+==== Serverless Node.js
+EL modelo Serverless es ideal si necesitas una solución escalable que pueda manejar cargas computacionales más complejas que el tiempo de ejecución de Edge.
+
+La desventaja en comparación con las rutas que utilizan el Edge es que puede tardar cientos de milisegundos en arrancar las funciones Serverless antes de que comiencen a procesar las solicitudes. Dependiendo de la cantidad de tráfico que reciba tu sitio, esto podría ser una ocurrencia frecuente ya que las funciones no están frecuentemente "calientes".
+
+[cols="1,1,1,1", options="header"]
+|===
+| Característica     | Node   | Serverless  | Edge
+
+| Inicio en frío     | /      | Normal      | Bajo
+| Transmisión HTTP   | Sí     | Sí          | Sí
+| IO                 | Todo   | Todo        | fetch
+| Escalabilidad      | /      | Alta        | Máxima
+| Seguridad          | Normal | Alta        | Alta
+| Latencia           | Normal | Baja        | Mínima
+| Paquetes npm       | Todo   | Todo        | Un subconjunto más pequeño
+| Renderizado estático| Sí    | Sí          | No
+| Renderizado dinámico | Sí  | Sí          | Sí
+| Revalidación de datos con fetch | Sí | Sí | Sí
+|===
+
+.Para establecer un entorno de ejecución, en page.tsx o layout.tsx:
+```jsx
+export const runtime = 'edge' // 'nodejs' (default) | 'edge'
+```
+== Cache
+
+Next.js mejora el rendimiento de la aplicación y reduce costes al almacenar en caché el trabajo de renderizado y las solicitudes de datos. Esta página proporciona una visión detallada de los mecanismos de almacenamiento en caché de Next.js, las API que puedes utilizar para configurarlos y cómo interactúan entre sí.
+
+.Aquí hay una descripción general de los diferentes mecanismos de almacenamiento en caché y su propósito:
+|===
+| Mecanismo | Qué | Dónde | Propósito | Duración
+
+| Request Memoization | Valores de retorno de funciones | Servidor | Reutilizar datos en un árbol de Componentes de React | Ciclo de vida de la solicitud
+| Data Cache | Datos | Servidor | Almacenar datos a través de solicitudes de usuarios y despliegues | Persistente (puede ser revalidado)
+| Full Route Cache | HTML y carga útil de RSC | Servidor | Reducir el costo de renderizado y mejorar el rendimiento | Persistente (puede ser revalidado)
+| Router Cache | Carga útil de RSC | Cliente | Reducir las solicitudes al servidor en la navegación | Sesión del usuario o basado en tiempo
+|===
+
+
+Por defecto, Next.js almacenará en caché tanto como sea posible para mejorar el rendimiento y reducir costes. Esto significa que las rutas se renderizan estáticamente y las solicitudes de datos se almacenan en caché a menos que optes por no hacerlo. 
+
+
+=== Request Memoization
+
+React extiende la API fetch para memoizar automáticamente las solicitudes que tienen la misma URL y opciones. Esto significa que puedes llamar a una función fetch para los mismos datos en múltiples lugares en un árbol de componentes de React y solo ejecutarla una vez.
+
+Por ejemplo, si hay que utilizar los mismos datos en una ruta (por ejemplo, en un Layout, Page y múltiples componentes), no es necesario obtener los datos en la parte superior del árbol y reenviar props entre componentes. En su lugar, puedes obtener los datos en los componentes que los necesitan sin preocuparte por las implicaciones de rendimiento de hacer múltiples solicitudes a través de la red para los mismos datos.
+
+.Ejemlo de Request Memoization:
+```jsx
+async function getItem() {
+  // The `fetch` function is automatically memoized and the result
+  // is cached
+  const res = await fetch('https://.../item/1')
+  return res.json()
+}
+ 
+// This function is called twice, but only executed the first time
+const item = await getItem() // cache MISS
+ 
+// The second call could be anywhere in your route
+const item = await getItem() // cache HIT
+```
+
+.Comportamiento de Request Memoization:
+* Mientras se renderiza una ruta, la primera vez que se llama a una solicitud en particular, su resultado no estará en memoria y será un cache MISS.
+* Por lo tanto, la función se ejecutará y los datos se obtendrán de la fuente externa, y el resultado se almacenará en memoria.
+* Las llamadas de función subsiguientes de la solicitud en el mismo pase de renderizado serán un cache HIT, y los datos se devolverán de la memoria sin ejecutar la función.
+* Una vez que se ha renderizado la ruta y se ha completado el pase de renderizado, la memoria se "restablece" y todas las entradas de memoización de solicitud se borran.
+* La memoización de solicitudes es una característica de React, no de Next.js. Se incluye aquí para mostrar cómo interactúa con los otros mecanismos de almacenamiento en caché.
+* La memoización solo se aplica al método GET en las solicitudes de fetch.
+* Se aplica a las solicitudes de fetch en generateMetadata, generateStaticParams, Layouts, Pages y otros Componentes del Servidor.
+* No se aplica a las solicitudes de fetch en Route Handlers, ya que no forman parte del árbol de componentes de React.
+* Para casos en los que fetch no es adecuado (por ejemplo, algunos clientes de bases de datos, clientes de CMS o clientes de GraphQL), puedes utilizar la función de caché de React para memoizar funciones.
+* La memoria caché dura toda la vida de una solicitud de servidor hasta que el árbol de componentes de React haya terminado de renderizarse.
+* Dado que la memoización no se comparte entre las solicitudes del servidor y solo se aplica durante el renderizado, no es necesario revalidarla.
+* La memorización sólo se aplica al método GET en las solicitudes de fetch, otros métodos, como POST y DELETE, no se memorizan. Este comportamiento predeterminado es una optimización de React y no recomendamos optar por no utilizarlo.
+
+.Para gestionar solicitudes individuales, puedes utilizar la propiedad signal de AbortController. Sin embargo, esto no excluirá las solicitudes de la memoización, sino que abortará las solicitudes en curso.
+```jsx
+const { signal } = new AbortController()
+fetch(url, { signal })
+```
+
+=== Data Cache
+
+Next.js tiene una caché de datos integrada que persiste el resultado de las solicitudes de datos a través de las solicitudes entrantes al servidor y los despliegues. Esto es posible porque Next.js extiende la API fetch nativa para permitir que cada solicitud en el servidor establezca su propia semántica de almacenamiento en caché persistente.
+
+En el navegador, la opción cache de fetch indica cómo una solicitud interactuará con la caché HTTP del navegador, en Next.js, la opción cache indica cómo una solicitud en el servidor interactuará con la caché de datos del servidor.
+
+Por defecto, las solicitudes de datos que utilizan fetch se almacenan en caché. Puedes utilizar las opciones cache y next.revalidate de fetch para configurar el comportamiento de almacenamiento en caché.
+
+.Cómo funciona Data Cache:
+* La primera vez que se llama a una solicitud de fetch durante el renderizado, Next.js comprueba la Data Cache en busca de una respuesta en caché.
+* Si se encuentra una respuesta en caché, se devuelve inmediatamente y se memoiza.
+* Si no se encuentra una respuesta en caché, se realiza la solicitud al origen de datos, el resultado se almacena en la Data Cache y se memoiza.
+* Para los datos sin caché (por ejemplo, { cache: 'no-store' }), el resultado siempre se obtiene del origen de datos y se memoiza.
+* Ya sea que los datos estén en caché o no, las solicitudes siempre se memoizan para evitar hacer solicitudes duplicadas por los mismos datos durante un pase de renderizado de React.
+* Data Cache es persistente a través de las solicitudes entrantes y los despliegues a menos que revalide o opte por no hacerlo.
+
+.Los datos en caché se pueden revalidar de dos maneras, con:
+
+* *Revalidación basada en el tiempo:* Revalida los datos después de que haya pasado cierta cantidad de tiempo y se haga una nueva solicitud. Esto es útil para datos que cambian con poca frecuencia y la frescura no es tan crítica.
+* *Revalidación bajo demanda:* Revalida los datos en función de un evento (por ejemplo, envío de formulario). La revalidación bajo demanda puede utilizar un enfoque basado en etiquetas o en rutas para revalidar grupos de datos a la vez. Esto es útil cuando quieres asegurarte de que los datos más recientes se muestren lo antes posible (por ejemplo, cuando se actualiza el contenido de tu CMS sin cabeza).
+
+.Para revalidar los datos en un intervalo de tiempo, puedes utilizar la opción next.revalidate de fetch para establecer la vida útil de la caché de un recurso (en segundos).
+```jsx
+// Revalidate at most every hour
+fetch('https://...', { next: { revalidate: 3600 } })
+```
+
+.Cómo funciona la revalidación basada en el tiempo:
+* La primera vez que se llama a una solicitud de fetch con revalidate, los datos se obtendrán de la fuente de datos externa y se almacenarán en la Data Cache.
+* Cualquier solicitud que se realice dentro del intervalo de tiempo especificado (por ejemplo, 60 segundos) devolverá los datos en caché.
+* Después del intervalo de tiempo, la siguiente solicitud seguirá devolviendo los datos en caché (ahora obsoletos).
+** Next.js activará una revalidación de los datos en segundo plano.
+** Una vez que los datos se obtengan correctamente, Next.js actualizará la Data Cache con los datos frescos.
+** Si la revalidación en segundo plano falla, los datos anteriores se mantendrán sin cambios.
+
+=== Full Route Cache
+
+Next.js renderiza y almacena en caché automáticamente las rutas en el tiempo de construcción. Esta es una optimización que te permite servir la ruta en caché en lugar de renderizar en el servidor para cada solicitud, lo que resulta en cargas de página más rápidas.
+
+Para entender cómo funciona la Full Route Cache, es útil ver cómo React maneja el renderizado y cómo Next.js almacena en caché el resultado.
+
+==== Renderizado en React en el Servidor
+En el servidor, Next.js utiliza las API de React para orquestar el renderizado. El trabajo de renderizado se divide en fragmentos: por segmentos de rutas individuales y límites de Suspense.
+
+.Cada fragmento se renderiza en dos pasos:
+* React renderiza los Componentes del Servidor en un formato de datos especial, optimizado para la transmisión, llamado el Payload de Componente del Servidor de React.
+* Next.js utiliza el Payload de Componente del Servidor de React e instrucciones de JavaScript de Componente del Cliente para renderizar HTML en el servidor.
+
+Esto significa que no tenemos que esperar a que todo se renderice antes de almacenar en caché el trabajo o enviar una respuesta. En su lugar, podemos transmitir una respuesta a medida que se completa el trabajo.
+
+What is the React Server Component Payload?
+Qué es el Payload de Componente del Servidor de React?
+
+El Payload de Componente del Servidor de React es una representación binaria compacta del árbol de Componentes del Servidor de React renderizado. Se utiliza por React en el cliente para actualizar el DOM del navegador. 
+
+.El Payload de Componente del Servidor de React contiene:
+* El resultado renderizado de los Componentes del Servidor
+* Marcadores de posición para dónde deben renderizarse los Componentes del Cliente y referencias a sus archivos JavaScript
+* Cualquier prop que se pase de un Componente del Servidor a un Componente del Cliente
+
+==== Almacenamiento en caché de Next.js en el Servidor (Caché de Ruta Completa)
+
+El comportamiento predeterminado de Next.js es almacenar en caché el resultado renderizado (Payload de Componente del Servidor de React y HTML) de una ruta en el servidor. Esto se aplica a las rutas renderizadas estáticamente en el tiempo de construcción, o durante la revalidación.
+
+===== React Hydration y Reconciliation en el Client
+
+.En el momento de la solicitud, en el cliente:
+* El HTML se utiliza para mostrar inmediatamente una vista previa inicial rápida no interactiva de los Componentes del Cliente y del Servidor.
+* El Payload de Componente del Servidor de React se utiliza para conciliar los árboles de Componentes del Cliente y del Servidor renderizados, y actualizar el DOM.
+* Las instrucciones de JavaScript se utilizan para hidratar. Los Componentes del Cliente y se utilizan para hacer que la aplicación sea interactiva.
+
+===== Next.js Caching en el cliente (Router Cache)
+
+El Payload de Componente del Servidor de React se almacena en la caché del enrutador del lado del cliente, una caché en memoria separada, dividida por segmento de ruta individual. Esta caché del enrutador se utiliza para mejorar la experiencia de navegación almacenando las rutas visitadas anteriormente y precargando las rutas futuras.
+
+===== Navegaciones posteriores
+
+En las navegaciones posteriores o durante la precarga, Next.js comprobará si el Payload de Componente del Servidor de React está almacenado en la caché del enrutador. Si es así, omitirá enviar una nueva solicitud al servidor.
+
+Si los segmentos de ruta no están en la caché, Next.js obtendrá el Payload de Componente del Servidor de React del servidor y llenará la caché del enrutador en el cliente.
+
+===== Renderizado Estático y Dinámico
+
+Mientras que una ruta está en caché o no en el tiempo de construcción depende de si se renderiza estática o dinámicamente. Las rutas estáticas se almacenan en caché de forma predeterminada, mientras que las rutas dinámicas se renderizan en el momento de la solicitud y no se almacenan en caché.
+
+Por defecto, la Caché de Ruta Completa es persistente. Esto significa que la salida del renderizado se almacena en caché a través de las solicitudes de los usuarios.
+
+.Hay dos formas de invalidar la Caché de Ruta Completa:
+* Revalidación de Datos: Revalidar la Caché de Datos, a su vez invalidará la Caché del Enrutador al volver a renderizar componentes en el servidor y almacenar en caché la nueva salida de renderizado.
+* Redespliegue: A diferencia de la Caché de Datos, que persiste a través de los despliegues, la Caché de Ruta Completa se borra en los nuevos despliegues.
+
+.You can opt out of the Full Route Cache, or in other words, dynamically render components for every incoming request, by:
+.Puedes optar por no utilizar la Caché de Ruta Completa, o en otras palabras, renderizar dinámicamente componentes para cada solicitud entrante, mediante:
+* Usando una función dinámica: Esto optará por no utilizar la Caché de Ruta Completa y renderizarla dinámicamente en el momento de la solicitud. La Caché de Datos todavía se puede utilizar.
+* Usando las opciones de configuración de segmento de ruta dynamic = 'force-dynamic' o revalidate = 0: Esto omitirá la Caché de Ruta Completa y la Caché de Datos. Significa que los componentes se renderizarán y los datos se obtendrán en cada solicitud entrante al servidor. La Caché del Enrutador seguirá aplicándose ya que es una caché del lado del cliente.
+* Optar por no utilizar la Caché de Datos: Si una ruta tiene una solicitud de fetch que no está en caché, esto optará por no utilizar la Caché de Ruta Completa. Los datos para la solicitud de fetch específica se obtendrán para cada solicitud entrante. Otras solicitudes de fetch que no opten por no almacenar en caché seguirán almacenadas en la Caché de Datos. Esto permite una combinación de datos en caché y no en caché.
+
+=== Router Cache
+
+Next.js tiene una caché en memoria del lado del cliente que almacena el Payload de Componente del Servidor de React, dividido por segmentos de ruta individuales, durante la duración de una sesión de usuario. Esto se llama la Caché del Enrutador.
+
+Cuando un usuario navega entre rutas, Next.js almacena en caché los segmentos de ruta visitados y precarga las rutas a las que es probable que navegue el usuario (basándose en los componentes <Link> en su viewport).
+
+.Esto resulta en una experiencia de navegación mejorada para el usuario:
+* Navegación instantánea hacia atrás/adelante porque las rutas visitadas están en caché y navegación rápida a nuevas rutas debido a la precarga y el renderizado parcial.
+* Sin recarga de página completa entre las navegaciones, y el estado de React y el estado del navegador se conservan.
+
+.La diferencia entre la Caché del Enrutador y la Caché de Ruta Completa:
+* El Router Cache almacena temporalmente el Payload de Componente del Servidor de React en el navegador durante la duración de una sesión de usuario, mientras que la Caché de Ruta Completa almacena persistentemente el Payload de Componente del Servidor de React y el HTML en el servidor a través de múltiples solicitudes de usuario.
+* Mientras que la Caché de Ruta Completa solo almacena en caché rutas renderizadas estáticamente, la Caché del Enrutador se aplica tanto a rutas renderizadas estática como dinámicamente.
+
+
+.Dos factores determinan cuánto tiempo dura la caché del enrutador:
+* Session: The cache persists across navigation. However, it's cleared on page refresh.
+* Sesión: La caché persiste a través de la navegación. Sin embargo, se borra al refrescar la página.
+* Automatic Invalidation Period: The cache of an individual segment is automatically invalidated after a specific time. The duration depends on how the resource was prefetched:
+* Periodo de Invalidez Automática: La caché de un segmento individual se invalida automáticamente después de un tiempo específico. La duración depende de cómo se haya precargado el recurso:
+** Default Prefetching (prefetch={null} o sin especificar): 30 segundos
+** Full Prefetching: (prefetch={true} o router.prefetch): 5 minutos
+
+.Hay dos formas de invalidar la Caché del Enrutador:
+* En una Acción del Servidor:
+** Revalidar datos bajo demanda por ruta con (revalidatePath) o por etiqueta de caché con (revalidateTag)
+** Usar cookies.set o cookies.delete invalida la Caché del Enrutador para evitar que las rutas que utilizan cookies se vuelvan obsoletas (por ejemplo, autenticación).
+* Llamar a router.refresh invalidará la Caché del Enrutador y hará una nueva solicitud al servidor para la ruta actual.
+
+No es posible optar por no utilizar la Caché del Router. Sin embargo, puedes invalidarla llamando a router.refresh, revalidatePath o revalidateTag (ver arriba). Esto limpiará la caché y hará una nueva solicitud al servidor, asegurando que se muestren los datos más recientes.
+
+Es posible optar por no precargar configurando la propiedad prefetch del componente <Link> en false. Sin embargo, esto seguirá almacenando temporalmente los segmentos de ruta durante 30 segundos para permitir la navegación instantánea entre segmentos anidados, como las barras de pestañas, o la navegación hacia atrás y hacia adelante. Las rutas visitadas seguirán en caché.
+
+.Interacciones de Caché
+* *Data Cache y Full Route Cache*
+** Revalidar u optar por no utilizar la Caché de Datos invalidará la Caché de Ruta Completa, ya que la salida del renderizado depende de los datos.
+** Invalidar u optar por no utilizar la Caché de Ruta Completa no afecta a la Caché de Datos. Puedes renderizar dinámicamente una ruta que tenga datos en caché y no en caché. Esto es útil cuando la mayor parte de tu página utiliza datos en caché, pero tienes algunos componentes que dependen de datos que deben obtenerse en el momento de la solicitud. Puedes renderizar dinámicamente sin preocuparte por el impacto en el rendimiento de volver a obtener todos los datos.
+* *Data Cache y Caché del Enrutador del lado del cliente*
+** Revalidar la Caché de Datos en un Route Handler no invalidará inmediatamente la Caché del Enrutador, ya que el Route Handler no está vinculado a una ruta específica. Esto significa que la Caché del Enrutador seguirá sirviendo el payload anterior hasta una recarga dura, o
+** Para invalidar inmediatamente la Caché de Datos y la Caché del Enrutador, puedes utilizar revalidatePath o revalidateTag en una Acción del Servidor.
+
+.La siguiente tabla proporciona una visión general de cómo diferentes API de Next.js afectan al almacenamiento en caché:
+[cols="4*", options="header"]
+|===
+| API | Caché del Router Completo | Caché de Datos | Caché de React
+
+| <Link prefetch> | Caché | |
+| router.prefetch | Caché | |
+| router.refresh | Revalidar | |
+| fetch | | Caché | Caché
+| fetch options.cache | | Caché o No utilizar |
+| fetch options.next.revalidate | | Revalidar | Revalidar
+| fetch options.next.tags | | Caché | Caché
+| revalidateTag | Revalidar (Acción del Servidor) | Revalidar | Revalidar
+| revalidatePath | Revalidar (Acción del Servidor) | Revalidar | Revalidar
+| const revalidate | | Revalidar o No utilizar | Revalidar o No utilizar
+| const dynamic | | Caché o No utilizar | Caché o No utilizar
+| cookies | Revalidar (Acción del Servidor) | No utilizar |
+| headers, searchParams | | No utilizar |
+| generateStaticParams | | Caché |
+| React.cache | | | Caché
+| unstable_cache | | | |
+|===
+
+
+== Optimización
+
+=== Images
+
+.El componente Image de Next.js extiende el elemento HTML <img> con funciones para la optimización automática de imágenes:
+* *Optimización del tamaño:* Sirve automáticamente imágenes del tamaño correcto para cada dispositivo, utilizando formatos de imagen modernos como WebP y AVIF.
+* *Estabilidad visual:* Evita automáticamente el cambio de layout cuando las imágenes se están cargando.
+* *Cargas de página más rápidas:* Las imágenes solo se cargan cuando entran en el viewport utilizando la carga perezosa nativa del navegador, con marcadores de posición opcionales de desenfoque.
+* *Flexibilidad de assets:* Cambio de tamaño de imágenes bajo demanda, incluso para imágenes almacenadas en servidores remotos.
+
+.Ejemplo de uso de Image para imagen local:
+```jsx
+import Image from 'next/image'
+import profilePic from './me.png'
+ 
+export default function Page() {
+  return (
+    <Image
+      src={profilePic}
+      alt="Picture of the author"
+      // width={500} automatically provided
+      // height={500} automatically provided
+      // blurDataURL="data:..." automatically provided
+      // placeholder="blur" // Optional blur-up while loading
+    />
+  )
+}
+```
+
+En el ejemplo anterior, se proporciona una URL parcial ("/me.png") para una imagen local. Esto es posible gracias a la arquitectura de los *loaders*.
+
+Un loader es una función que genera las URL para tu imagen. Modifica el src proporcionado y genera múltiples URL para solicitar la imagen en diferentes tamaños. Estas múltiples URL se utilizan en la generación automática de srcset, para que los visitantes de tu sitio reciban una imagen del tamaño adecuado para su viewport.
+
+El loader predeterminado para las aplicaciones de Next.js utiliza la API de optimización de imágenes integrada, que optimiza imágenes desde cualquier lugar de la web, y luego las sirve directamente desde el servidor web de Next.js. Si deseas servir tus imágenes directamente desde un CDN o un servidor de imágenes, puedes escribir tu propia función de loader con unas pocas líneas de JavaScript.
+
+.Ejemplo de uso de Image para imagen remota:
+```jsx
+import Image from 'next/image'
+ 
+export default function Page() {
+  return (
+    <Image
+      src="https://s3.amazonaws.com/my-bucket/profile.png"
+      alt="Picture of the author"
+      width={500}
+      height={500}
+      // blurDataURL="data:..." automatically provided
+      // placeholder="blur" // Optional blur-up while loading
+    />
+  )
+}
+```
+
+Para permitir de forma segura la optimización de imágenes, define una lista de patrones de URL admitidos en next.config.tsx. Sé lo más específico posible para evitar un uso malintencionado.
+
+.Por ejemplo, la siguiente configuración solo permitirá imágenes de un bucket específico de AWS S3, en next.config.tsx:
+```jsx
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 's3.amazonaws.com',
+        port: '',
+        pathname: '/my-bucket/**',
+      },
+    ],
+  },
+}
+```
+
+==== Priority
+
+Deberías añadir la propiedad priority a la imagen que será el elemento *Largest Contentful Paint* (LCP) para cada página. De esta forma, Next.js puede priorizar especialmente la imagen para su carga (por ejemplo, a través de etiquetas de precarga o pistas de prioridad), lo que conlleva un impulso significativo en el LCP.
+
+El elemento LCP suele ser la imagen más grande o el bloque de texto visible dentro del viewport de la página. Cuando ejecutas next dev, verás una advertencia en la consola si el elemento LCP es una <Image> sin la propiedad priority.
+
+.Una vez que hayas identificado la imagen LCP, puedes añadir la propiedad de la siguiente forma:
+```jsx
+import Image from 'next/image'
+import profilePic from '../public/me.png'
+ 
+export default function Page() {
+  return <Image src={profilePic} alt="Picture of the author" priority />
+}
+```
+
+==== Image sizing
+
+One of the ways that images most commonly hurt performance is through layout shift, where the image pushes other elements around on the page as it loads in. This performance problem is so annoying to users that it has its own Core Web Vital, called Cumulative Layout Shift. The way to avoid image-based layout shifts is to always size your images. This allows the browser to reserve precisely enough space for the image before it loads.
+Una de las formas más comunes en que las imágenes afectan al rendimiento es a través del cambio de layout, donde la imagen empuja a otros elementos alrededor de la página mientras se carga. Este problema de rendimiento es tan molesto para los usuarios que tiene su propio Core Web Vital, llamado Cambio de layout Acumulativo. La forma de evitar los cambios de layout basados en imágenes es siempre dimensionar tus imágenes. Esto permite al navegador reservar exactamente el espacio suficiente para la imagen antes de que se cargue.
+
+.Porque next/image está diseñado para garantizar buenos resultados de rendimiento, no se puede utilizar de una manera que contribuya al cambio de layout, y debe dimensionarse de una de las tres formas:
+* Automáticamente, utilizando una importación estática
+* Explícitamente, incluyendo una propiedad de ancho y alto
+* Implícitamente, utilizando fill que hace que la imagen se expanda para llenar su elemento padre.
+
+==== Estilos
+
+Usar estilos en el componente Image es similar a usar estilos en un elemento <img> normal, pero hay algunas pautas a tener en cuenta:
+
+* Usa className o style, no styled-jsx.
+** En la mayoría de los casos, recomendamos usar la propiedad className. Esto puede ser un módulo CSS importado, una hoja de estilos global, etc.
+** También puedes usar la propiedad style para asignar estilos en línea.
+** No puedes usar styled-jsx porque está limitado al componente actual (a menos que marques el estilo como global).
+* Cuando se usa fill, el elemento padre debe tener position: relative
+** Esto es necesario para el renderizado adecuado del elemento de imagen en ese modo de layout.
+* Cuando se usa fill, el elemento padre debe tener display: block
+** Esto es lo predeterminado para los elementos <div> pero debe especificarse de otra manera.
+
+.Ejemplo de uso de estilos en Image:
+```jsx
+import Image from 'next/image'
+import mountains from '../public/mountains.jpg'
+ 
+export default function Responsive() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Image
+        alt="Mountains"
+        // Importing an image will
+        // automatically set the width and height
+        src={mountains}
+        sizes="100vw"
+        // Make the image display full width
+        style={{
+          width: '100%',
+          height: 'auto',
+        }}
+      />
+    </div>
+  )
+}
+```
+
+.Ejemplo de uso de fill en Image:
+```jsx
+import Image from 'next/image'
+import mountains from '../public/mountains.jpg'
+ 
+export default function Fill() {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridGap: '8px',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, auto))',
+      }}
+    >
+      <div style={{ position: 'relative', height: '400px' }}>
+        <Image
+          alt="Mountains"
+          src={mountains}
+          fill
+          sizes="(min-width: 808px) 50vw, 100vw"
+          style={{
+            objectFit: 'cover', // cover, contain, none
+          }}
+        />
+      </div>
+      {/* And more images in the grid... */}
+    </div>
+  )
+}
+```
+
+.Ejemplo de imagen de fondo con Image:
+```jsx
+import Image from 'next/image'
+import mountains from '../public/mountains.jpg'
+ 
+export default function Background() {
+  return (
+    <Image
+      alt="Mountains"
+      src={mountains}
+      placeholder="blur"
+      quality={100}
+      fill
+      sizes="100vw"
+      style={{
+        objectFit: 'cover',
+      }}
+    />
+  )
+}
+```
+
+=== Video
+
+Los videos se pueden incrustar en la página utilizando la etiqueta HTML <video> para archivos de video directos y <iframe> para videos alojados en plataformas externas.
+
+==== <video>
+
+El elemento HTML <video> puede incrustar contenido de video autohospedado o servido directamente, permitiendo un control total sobre la reproducción y la apariencia.
+
+.Ejemplo de uso de <video>:
+```jsx
+export function Video() {
+  return (
+    <video width="320" height="240" controls preload="none">
+      <source src="/path/to/video.mp4" type="video/mp4" />
+      <track
+        src="/path/to/captions.vtt"
+        kind="subtitles"
+        srcLang="en"
+        label="English"
+      />
+      Your browser does not support the video tag.
+    </video>
+  )
+}
+```
+
+.Tabla de tags de <video>:
+|===
+| Atributo | Descripción | Valor de Ejemplo
+
+| src | Especifica la fuente del archivo de video. | <video src="/path/to/video.mp4" />
+| width | Establece el ancho del reproductor de video. | <video width="320" />
+| height | Establece la altura del reproductor de video. | <video height="240" />
+| controls | Si está presente, muestra el conjunto predeterminado de controles de reproducción. | <video controls />
+| autoPlay | Comienza a reproducir el video automáticamente cuando se carga la página. Nota: Las políticas de reproducción automática varían entre navegadores. | <video autoPlay />
+| loop | Reproduce el video en bucle. | <video loop />
+| muted | Silencia el audio por defecto. A menudo se usa con autoPlay. | <video muted />
+| preload | Especifica cómo se precarga el video. Valores: none, metadata, auto. | <video preload="none" />
+| playsInline | Habilita la reproducción en línea en dispositivos iOS, a menudo necesario para que la reproducción automática funcione en Safari de iOS. | <video playsInline />
+|===
+
+.Buenas prácticas para el uso de <video>:
+* Contenido de Respaldo: Al utilizar la etiqueta <video>, incluye contenido de respaldo dentro de la etiqueta para los navegadores que no admiten la reproducción de video.
+* Subtítulos o Leyendas: Incluye subtítulos o leyendas para los usuarios sordos o con problemas de audición. Utiliza la etiqueta <track> con tus elementos <video> para especificar las fuentes de archivos de subtítulos.
+* Controles Accesibles: Se recomiendan los controles de video HTML5 estándar para la navegación con teclado y la compatibilidad con lectores de pantalla. Para necesidades avanzadas, considera reproductores de terceros como react-player o video.js, que ofrecen controles accesibles y una experiencia de navegador consistente.
+
+==== <iframe>
+
+El elemento HTML <iframe> te permite incrustar videos de plataformas externas como YouTube o Vimeo.
+
+.Ejemplo de uso de <iframe>:
+```jsx
+export default function Page() {
+  return (
+    <iframe
+      src="https://www.youtube.com/watch?v=gfU1iZnjRZM"
+      frameborder="0"
+      allowfullscreen
+    />
+  )
+}
+```
+
+.Tabla de tags de <iframe>:
+
+|===
+| Atributo | Descripción | Valor de Ejemplo
+
+| src | La URL de la página a incrustar. | <iframe src="https://example.com" />
+| width | Establece el ancho del iframe. | <iframe width="500" />
+| height | Establece la altura del iframe. | <iframe height="300" />
+| frameborder | Especifica si se muestra o no un borde alrededor del iframe. | <iframe frameborder="0" />
+| allowfullscreen | Permite que el contenido del iframe se muestre en modo de pantalla completa. | <iframe allowfullscreen />
+| sandbox | Habilita un conjunto adicional de restricciones en el contenido dentro del iframe. | <iframe sandbox />
+| loading | Optimiza el comportamiento de carga (por ejemplo, carga diferida). | <iframe loading="lazy" />
+| title | Proporciona un título para el iframe para apoyar la accesibilidad. | <iframe title="Descripción" />
+|===
+
+.Hay dos formas de incrustar videos en tu aplicación Next.js:
+* Videos alojados en el propio servidor: Incrusta videos autohospedados utilizando la etiqueta <video> para escenarios que requieren un control detallado sobre la funcionalidad y apariencia del reproductor. Este método de integración en Next.js permite la personalización y el control de tu contenido de video.
+* Uso de servicios de alojamiento de videos (YouTube, Vimeo, etc.): Para servicios de alojamiento de videos como YouTube o Vimeo, incrustarás sus reproductores basados en iframes utilizando la etiqueta <iframe>. Aunque este método limita algo el control sobre el reproductor, ofrece facilidad de uso y funciones proporcionadas por estas plataformas.
+
+=== Fonts
+
+next/font optimizará automáticamente fueentes (incluidas las fuentes personalizadas) y eliminará las solicitudes de red externas para mejorar la privacidad y el rendimiento.
+
+
+next/font incluye autohospedaje automático para cualquier archivo de fuente. Esto significa que puedes cargar fuentes web de forma óptima sin ningún cambio de layout, gracias a la propiedad CSS size-adjust utilizada.
+
+Esta nueva fuente del sistema también te permite usar convenientemente todas las fuentes de Google con el rendimiento y la privacidad en mente. Los archivos CSS y de fuentes se descargan en tiempo de compilación y se autohospedan con el resto de tus activos estáticos. No se envían solicitudes a Google por parte del navegador.
+
+==== Google Fonts
+
+Automáticamente autohospeda cualquier fuente de Google. Las fuentes se incluyen en el despliegue y se sirven desde el mismo dominio que tu despliegue. El navegador no envía solicitudes a Google.
+
+.Comienza importando la fuente que te gustaría usar de next/font/google como una función. Recomendamos usar fuentes variables para obtener el mejor rendimiento y flexibilidad.
+```jsx
+import { Inter } from 'next/font/google'
+ 
+// If loading a variable font, you don't need to specify the font weight
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  // weight: 400, // Optional: preload the 400 weight to avoid FOUT
+  // weights: [400, 500, 600], // Optional: preload multiple weights
+})
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className={inter.className}>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+.El primer enfoque es crear una función de utilidad que exporte una fuente, la importe y aplique su className donde sea necesario. Esto garantiza que la fuente se precargue solo cuando se renderice:
+```jsx
+// app/fonts.ts
+import { Inter, Roboto_Mono } from 'next/font/google'
+ 
+export const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+})
+ 
+export const roboto_mono = Roboto_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+// pages/layout.tsx
+import { inter } from './fonts'
+ 
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={inter.className}>
+      <body>
+        <div>{children}</div>
+      </body>
+    </html>
+  )
+}
+
+// app/pages.tsx
+import { roboto_mono } from './fonts'
+ 
+export default function Page() {
+  return (
+    <>
+      <h1 className={roboto_mono.className}>My page</h1>
+    </>
+  )
+}
+```
+
+.Alternativamente, puedes crear una variable CSS y usarla con tu solución CSS preferida:
+```jsx
+import { Inter, Roboto_Mono } from 'next/font/google'
+import styles from './global.css'
+ 
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+ 
+const roboto_mono = Roboto_Mono({
+  subsets: ['latin'],
+  variable: '--font-roboto-mono',
+  display: 'swap',
+})
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className={`${inter.variable} ${roboto_mono.variable}`}>
+      <body>
+        <h1>My App</h1>
+        <div>{children}</div>
+      </body>
+    </html>
+  )
+}
+```
+
+.En app/global.css:
+```css
+html {
+  font-family: var(--font-inter);
+}
+ 
+h1 {
+  font-family: var(--font-roboto-mono);
+}
+```
+
+==== Fuentes personalizadas
+
+Las fuentes personalizadas se pueden autohospedar y optimizar con next/font/local. Los archivos de fuentes se incluyen en el despliegue y se sirven desde el mismo dominio que tu despliegue. El navegador no envía solicitudes a servidores externos.
+
+.Importa next/font/local y especifica la src de tu archivo de fuente local. Recomendamos usar fuentes variables para obtener el mejor rendimiento y flexibilidad.
+```jsx
+import localFont from 'next/font/local'
+ 
+// Font files can be colocated inside of `app`
+const myFont = localFont({
+  src: './my-font.woff2',
+  display: 'swap',
+})
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className={myFont.className}>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+.Si deseas utilizar varios archivos para una sola familia de fuentes, src puede ser un array:
+```jsx
+const roboto = localFont({
+  src: [
+    {
+      path: './Roboto-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './Roboto-Italic.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: './Roboto-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: './Roboto-BoldItalic.woff2',
+      weight: '700',
+      style: 'italic',
+    },
+  ],
+})
+```
+
+=== Metadata
+
+Next.js tiene una API de metadatos que se puede utilizar para definir los metadatos de tu aplicación (por ejemplo, etiquetas meta y de enlace dentro del elemento head de tu HTML) para mejorar el SEO y la compartibilidad web.
+
+.Hay dos formas de añadir metadatos a tu aplicación:
+* *Configuración basada en metadatos:* Exporta un objeto de metadatos estático o una función generateMetadata dinámica en un archivo layout.js o page.js.
+* *Metadatos basados en archivos:* Añade archivos especiales estáticos o generados dinámicamente a segmentos de ruta.
+
+.Para definir *metadatos estáticos*, exporta un objeto Metadata desde un archivo layout.js o page.js estático.
+```jsx
+import type { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: '...',
+  description: '...',
+}
+ 
+export default function Page() {}
+```
+
+.Es posible usar la función generateMetadata para obtener metadatos que requieran valores dinámicos.
+```jsx
+import type { Metadata, ResolvingMetadata } from 'next'
+ 
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+ 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const id = params.id
+ 
+  // fetch data
+  const product = await fetch(`https://.../${id}`).then((res) => res.json())
+ 
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || []
+ 
+  return {
+    title: product.title,
+    openGraph: {
+      images: ['/some-specific-page-image.jpg', ...previousImages],
+    },
+  }
+}
+ 
+export default function Page({ params, searchParams }: Props) {}
+```
+
+.En resumen:
+* Ambos metadatos estáticos y dinámicos a través de generateMetadata solo son compatibles en Componentes del Servidor.
+* Las solicitudes de fetch se memorizan automáticamente para los mismos datos en generateMetadata, generateStaticParams, Layouts, Pages y Componentes del Servidor. La caché de React se puede utilizar si fetch no está disponible.
+* Next.js esperará a que la obtención de datos dentro de generateMetadata se complete antes de transmitir la interfaz de usuario al cliente. Esto garantiza que la primera parte de una respuesta transmitida incluya las etiquetas <head>.
+
+=== Optimización de Scripts
+
+Next.js proporciona una API de optimización de scripts que te permite cargar scripts de forma diferida, asíncrona o en línea, y también te permite cargar scripts de forma condicional.
+
+.Para cargar un script de terceros para múltiples rutas, importa next/script e incluye el script directamente en tu componente de layout:
+```jsx
+import Script from 'next/script'
+ 
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <>
+      <section>{children}</section>
+      <Script src="https://example.com/script.js" />
+    </>
+  )
+}
+```
+
+El script de terceros se obtiene cuando se accede a la ruta de la carpeta (por ejemplo, dashboard/page.js) o a cualquier ruta anidada (por ejemplo, dashboard/settings/page.js) por el usuario. Next.js se asegurará de que el script se cargue solo una vez, incluso si un usuario navega entre múltiples rutas en el mismo diseño.
+
+.Para cargar un script de terceros para todas las rutas, importa next/script e incluye el script directamente en tu diseño raíz:
+```jsx
+import Script from 'next/script'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+      <Script src="https://example.com/script.js" />
+    </html>
+  )
+}
+```
+
+==== Estrategias de carga
+
+Aunque el comportamiento predeterminado de next/script te permite cargar scripts de terceros en cualquier página o diseño,
+
+.you can fine-tune its loading behavior by using the strategy property:
+.Es posible ajustar el comportamiento de carga de next/script utilizando la propiedad strategy:
+
+* *beforeInteractive:* Carga el script antes de cualquier código de Next.js y antes de que ocurra cualquier hidratación de página.
+* *afterInteractive:* (predeterminado) Carga el script temprano pero después de que ocurra alguna hidratación en la página.
+* *lazyOnload:* Carga el script más tarde durante el tiempo de inactividad del navegador.
+* *worker:* (experimental) Carga el script en un worker web.
+
+Los scripts que utilizan la estrategia worker se descargan y ejecutan en un worker web con Partytown. Esto puede mejorar el rendimiento de tu sitio dedicando el hilo principal al resto del código de tu aplicación.
+
+.Esta estrategia sigue siendo experimental y solo se puede utilizar si el indicador nextScriptWorkers está habilitado en next.config.tsx:
+```jsx
+module.exports = {
+  experimental: {
+    nextScriptWorkers: true,
+  },
+}
+```
+
+.Los event handlers se pueden utilizar con el componente Script para ejecutar código adicional después de que ocurra un determinado evento:
+* *onLoad:* Ejecuta código después de que el script haya terminado de cargarse.
+* *onReady:* Ejecuta código después de que el script haya terminado de cargarse y cada vez que se monta el componente.
+* *onError:* Ejecuta código si el script no se carga correctamente.
+
+.Estos handlers solo funcionarán cuando next/script se importe y se utilice dentro de un Componente del Cliente donde "use client" esté definido como la primera línea de código:
+```jsx
+'use client'
+ 
+import Script from 'next/script'
+ 
+export default function Page() {
+  return (
+    <>
+      <Script
+        src="https://example.com/script.js"
+        onLoad={() => {
+          console.log('Script has loaded')
+        }}
+      />
+    </>
+  )
+}
+```
+
+Hay muchos atributos DOM que se pueden asignar a un elemento <script> que no son utilizados por el componente Script, como nonce o atributos de datos personalizados. Incluir cualquier atributo adicional lo reenviará automáticamente al elemento <script> final y optimizado que se incluye en el HTML.
+
+.Para cargar un script de forma condicional, puedes utilizar la propiedad strategy y la propiedad src:
+```jsx
+import Script from 'next/script'
+ 
+export default function Page() {
+  return (
+    <>
+      <Script
+        src="https://example.com/script.js"
+        id="example-script"
+        nonce="XUENAJFW"
+        data-test="script"
+      />
+    </>
+  )
+}
+```
+
+=== Bundle analizer
+
+@next/bundle-analyzer es un plugin para Next.js que te ayuda a gestionar el tamaño de tus módulos de JavaScript. Genera un informe visual del tamaño de cada módulo y sus dependencias. Puedes utilizar la información para eliminar dependencias grandes, dividir tu código o cargar solo algunas partes cuando sea necesario, reduciendo la cantidad de datos transferidos al cliente.
+
+.Para instalar @next/bundle-analyzer, ejecuta el siguiente comando:
+```bash
+npm i @next/bundle-analyzer
+# or
+yarn add @next/bundle-analyzer
+# or
+pnpm add @next/bundle-analyzer
+```
+
+.Después, añade la configuración del analizador de paquetes a tu next.config.js.
+```jsx
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+ 
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+ 
+module.exports = withBundleAnalyzer(nextConfig)
+```
+
+.Para ejecutar el analizador de paquetes, añade el siguiente script a tu package.json:
+```json
+{
+  "scripts": {
+    "analyze": "ANALYZE=true npm run build"
+  }
+}
+```
+
+El informe se abrirá en tres nuevas pestañas en tu navegador, que puedes inspeccionar. Hacer esto regularmente mientras desarrollas y antes de desplegar tu sitio puede ayudarte a identificar grandes paquetes antes y a arquitectar tu aplicación para que sea más eficiente.
+
+=== Lazy loading
+
+Lazy loading en Next.js ayuda a mejorar el rendimiento de carga inicial de una aplicación al disminuir la cantidad de JavaScript necesaria para renderizar una ruta.
+
+Proporciona una forma de diferir la carga de Componentes del Cliente y bibliotecas importadas, e incluirlos en el paquete del cliente solo cuando sea necesario. Por ejemplo, es posible que desees diferir la carga de un modal hasta que un usuario haga clic para abrirlo.
+
+.Hay dos formas de implementar lazy loading en Next.js:
+* Usando Dynamic Imports con next/dynamic
+* Usando React.lazy() con Suspense
+
+Por defecto, los Componentes del Servidor se dividen automáticamente en código, y puedes utilizar el streaming para enviar progresivamente piezas de la interfaz de usuario del servidor al cliente. La carga diferida se aplica a los Componentes del Cliente.
+
+==== next/dynamic
+
+next/dynamic es un composite de React.lazy() y Suspense. Se comporta de la misma manera en los directorios de aplicaciones y páginas para permitir una migración incremental.
+
+.Para cargar un componente de forma diferida, importa next/dynamic y envuelve el componente en una llamada a la función:
+```jsx
+'use client'
+ 
+import { useState } from 'react'
+import dynamic from 'next/dynamic'
+ 
+// Client Components:
+const ComponentA = dynamic(() => import('../components/A'))
+const ComponentB = dynamic(() => import('../components/B'))
+const ComponentC = dynamic(() => import('../components/C'), { ssr: false })
+ 
+export default function ClientComponentExample() {
+  const [showMore, setShowMore] = useState(false)
+ 
+  return (
+    <div>
+      {/* Load immediately, but in a separate client bundle */}
+      <ComponentA />
+ 
+      {/* Load on demand, only when/if the condition is met */}
+      {showMore && <ComponentB />}
+      <button onClick={() => setShowMore(!showMore)}>Toggle</button>
+ 
+      {/* Load only on the client side */}
+      <ComponentC />
+    </div>
+  )
+}
+```
+
+Cuando se utiliza React.lazy() y Suspense, los Componentes del Cliente se pre-renderizarán (SSR) de forma predeterminada.
+
+.Si quieres desactivar el pre-renderizado para un Componente del Cliente, puedes utilizar la opción ssr establecida en false:
+```jsx
+const ComponentC = dynamic(() => import('../components/C'), { ssr: false })
+```
+
+Si importas dinámicamente un Componente del Servidor, solo los Componentes del Cliente que sean hijos del Componente del Servidor se cargarán de forma diferida, no el Componente del Servidor en sí.
+
+.Ejemplo de uso de next/dynamic en un Componente del Servidor:
+```jsx
+import dynamic from 'next/dynamic'
+ 
+// Server Component:
+const ServerComponent = dynamic(() => import('../components/ServerComponent'))
+ 
+export default function ServerComponentExample() {
+  return (
+    <div>
+      <ServerComponent />
+    </div>
+  )
+}
+```
+
+Las librerías externas se pueden cargar bajo demanda utilizando la función import(). Este ejemplo utiliza la librería externa fuse.js para la búsqueda difusa. El módulo solo se carga en el cliente después de que el usuario escriba en el campo de búsqueda.
+
+.Ejemplo de uso de next/dynamic con una librería externa:
+```jsx
+'use client'
+ 
+import { useState } from 'react'
+ 
+const names = ['Tim', 'Joe', 'Bel', 'Lee']
+ 
+export default function Page() {
+  const [results, setResults] = useState()
+ 
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Search"
+        onChange={async (e) => {
+          const { value } = e.currentTarget
+          // Dynamically load fuse.js
+          const Fuse = (await import('fuse.js')).default
+          const fuse = new Fuse(names)
+ 
+          setResults(fuse.search(value))
+        }}
+      />
+      <pre>Results: {JSON.stringify(results, null, 2)}</pre>
+    </div>
+  )
+}
+```
+
+.Ejemplo de uso de next/dynamic con un componente de carga:
+```jsx
+import dynamic from 'next/dynamic'
+ 
+const WithCustomLoading = dynamic(
+  () => import('../components/WithCustomLoading'),
+  {
+    loading: () => <p>Loading...</p>,
+  }
+)
+ 
+export default function Page() {
+  return (
+    <div>
+      {/* The loading component will be rendered while  <WithCustomLoading/> is loading */}
+      <WithCustomLoading />
+    </div>
+  )
+}
+```
+
+.Ejemplo de uso de next/dynamic con importaciones:
+```jsx
+import dynamic from 'next/dynamic'
+ 
+const ClientComponent = dynamic(() =>
+  import('../components/hello').then((mod) => mod.Hello)
+)
+
+```
+
+=== Analytics
+
+Next.js tiene soporte integrado para medir y reportar métricas de rendimiento. Puedes usar el gancho useReportWebVitals para gestionar el reporte tú mismo, o alternativamente, Vercel proporciona un servicio gestionado para recopilar y visualizar automáticamente las métricas por ti.
+
+==== Métricas propias
+
+Para medir y reportar métricas de rendimiento, puedes utilizar el gancho useReportWebVitals. Este gancho proporciona una función de devolución de llamada que se ejecuta cada vez que se reporta una métrica de rendimiento.
+
+.pp/_components/web-vitals.js:
+```jsx
+'use client'
+ 
+import { useReportWebVitals } from 'next/web-vitals'
+ 
+export function WebVitals() {
+  useReportWebVitals((metric) => {
+    console.log(metric)
+  })
+}
+```
+
+.app/layout.js:
+```jsx
+import { WebVitals } from './_components/web-vitals'
+ 
+export default function Layout({ children }) {
+  return (
+    <html>
+      <body>
+        <WebVitals />
+        {children}
+      </body>
+    </html>
+  )
+}
+```
+
+Como el hook useReportWebVitals requiere la directiva "use client", el enfoque más eficiente es crear un componente separado que importe el diseño raíz. Esto confina el límite del cliente exclusivamente al componente WebVitals.
+
+==== Web Vitals
+
+.Web Vitals son un conjunto de métricas útiles que tienen como objetivo capturar la experiencia del usuario de una página web. Las siguientes métricas web vitales están incluidas:
+* Time to First Byte (TTFB)
+* First Contentful Paint (FCP)
+* Largest Contentful Paint (LCP)
+* First Input Delay (FID)
+* Cumulative Layout Shift (CLS)
+* Interaction to Next Paint (INP)
+
+.Es posible manejar todos los resultados de estas métricas utilizando la propiedad name.
+```jsx
+'use client'
+ 
+import { useReportWebVitals } from 'next/web-vitals'
+ 
+export function WebVitals() {
+  useReportWebVitals((metric) => {
+    switch (metric.name) {
+      case 'FCP': {
+        // handle FCP results
+      }
+      case 'LCP': {
+        // handle LCP results
+      }
+      // ...
+    }
+  })
+}
+```
+
+.Es posible enviar los resultados a cualquier punto final para medir y rastrear el rendimiento real del usuario en tu sitio. Por ejemplo:
+```jsx
+useReportWebVitals((metric) => {
+  const body = JSON.stringify(metric)
+  const url = 'https://example.com/analytics'
+ 
+  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(url, body)
+  } else {
+    fetch(url, { body, method: 'POST', keepalive: true })
+  }
+})
+```
+
+=== Librerías de terceros
+
+@next/third-parties es una librería que proporciona una colección de componentes y utilidades que mejoran el rendimiento y la experiencia del desarrollador al cargar bibliotecas de terceros populares en tu aplicación Next.js.
+
+@next/third-parties es actualmente una librería experimental en desarrollo activo. Recomendamos instalarla con las banderas latest o canary mientras trabajamos en añadir más integraciones de terceros.
+
+
+.Para instalar @next/third-parties, ejecuta el siguiente comando:
+```bash
+npm install @next/third-parties@latest next@latest
+```
+
+==== Google Tag Manager
+
+El componente GoogleTagManager se puede utilizar para instanciar un contenedor de Google Tag Manager en una aplicación. De forma predeterminada, obtiene el script en línea original después de que se haya producido la hidratación en la página.
+
+.Para cargar Google Tag Manager para todas las rutas, incluye el componente directamente en tu diseño raíz y pasa tu ID de contenedor GTM:
+```jsx
+import { GoogleTagManager } from '@next/third-parties/google'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <GoogleTagManager gtmId="GTM-XYZ" />
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+.Para cargar Google Tag Manager para una sola ruta, incluye el componente en tu archivo de página:
+```jsx
+import { GoogleTagManager } from '@next/third-parties/google'
+ 
+export default function Page() {
+  return <GoogleTagManager gtmId="GTM-XYZ" />
+}
+```
+
+La función sendGTMEvent se puede utilizar para rastrear las interacciones del usuario en tu página enviando eventos utilizando el objeto dataLayer. Para que esta función funcione, el componente <GoogleTagManager /> debe incluirse en un diseño principal, página o componente, o directamente en el mismo archivo.
+
+.Ejemplo de uso de sendGTMEvent:
+```jsx
+'use client'
+ 
+import { sendGTMEvent } from '@next/third-parties/google'
+ 
+export function EventButton() {
+  return (
+    <div>
+      <button
+        onClick={() => sendGTMEvent({ event: 'buttonClicked', value: 'xyz' })}
+      >
+        Send Event
+      </button>
+    </div>
+  )
+}
+```
+
+.Opciones para pasar a Google Tag Manager. Para obtener una lista completa de opciones, lee la documentación de Google Tag Manager.
+|===
+| Nombre | Tipo | Descripción
+
+| gtmId | Requerido | Tu ID de contenedor de GTM. Generalmente comienza con GTM-.
+| dataLayer | Opcional | Matriz de capa de datos para iniciar el contenedor. Por defecto es un array vacío.
+| dataLayerName | Opcional | Nombre de la capa de datos. Por defecto es dataLayer.
+| auth | Opcional | Valor del parámetro de autenticación (gtm_auth) para fragmentos de entorno.
+| preview | Opcional | Valor del parámetro de vista previa (gtm_preview) para fragmentos de entorno.
+|===
+
+==== Google Analytics
+
+El componente GoogleAnalytics se puede utilizar para incluir Google Analytics 4 en tu aplicación a través de la etiqueta de Google (gtag.js). De forma predeterminada, obtiene los scripts originales después de que se haya producido la hidratación en la página.
+
+Si Google Tag Manager ya está incluido en tu aplicación, puedes configurar Google Analytics directamente utilizando Tag Manager, en lugar de incluir Google Analytics como un componente separado. Consulta la documentación para obtener más información sobre las diferencias entre Tag Manager y gtag.js.
+
+.Para cargar Google Analytics para todas las rutas, incluye el componente directamente en tu diseño raíz y pasa tu ID de medición:
+```jsx
+import { GoogleAnalytics } from '@next/third-parties/google'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+      <GoogleAnalytics gaId="G-XYZ" />
+    </html>
+  )
+}
+```
+
+.Para cargar Google Analytics para una sola ruta, incluye el componente en tu archivo de página:
+```jsx
+import { GoogleAnalytics } from '@next/third-parties/google'
+ 
+export default function Page() {
+  return <GoogleAnalytics gaId="G-XYZ" />
+}
+```
+
+La función sendGAEvent se puede utilizar para medir las interacciones del usuario en tu página enviando eventos utilizando el objeto dataLayer. Para que esta función funcione, el componente <GoogleAnalytics /> debe incluirse en un diseño principal, página o componente, o directamente en el mismo archivo.
+
+.Ejemplo de uso de sendGAEvent:
+```jsx
+'use client'
+ 
+import { sendGAEvent } from '@next/third-parties/google'
+ 
+export function EventButton() {
+  return (
+    <div>
+      <button
+        onClick={() => sendGAEvent({ event: 'buttonClicked', value: 'xyz' })}
+      >
+        Send Event
+      </button>
+    </div>
+  )
+}
+```
+
+.Opciones para pasar a Google Analytics. 
+|===
+| Nombre | Tipo | Descripción
+
+| gaId | Requerido | Tu ID de medición. Generalmente comienza con G-.
+| dataLayerName | Opcional | Nombre de la capa de datos. Por defecto es dataLayer.
+|===
+
+==== Google Maps Embed
+
+El componente GoogleMapsEmbed se puede utilizar para añadir un Google Maps Embed a tu página. De forma predeterminada, utiliza el atributo de carga para cargar de forma diferida el embed debajo del pliegue.
+
+.Para cargar Google Maps Embed para todas las rutas, incluye el componente directamente el componente:
+```jsx
+import { GoogleMapsEmbed } from '@next/third-parties/google'
+ 
+export default function Page() {
+  return (
+    <GoogleMapsEmbed
+      apiKey="XYZ"
+      height={200}
+      width="100%"
+      mode="place"
+      q="Brooklyn+Bridge,New+York,NY"
+    />
+  )
+}
+```
+
+.Las opciones para pasar a Google Maps Embed son:
+|===
+| Nombre | Tipo | Descripción
+
+| apiKey | Requerido | Tu clave de API.
+| mode | Requerido | Modo del mapa.
+| height | Opcional | Altura de la incrustación. Por defecto es auto.
+| width | Opcional | Ancho de la incrustación. Por defecto es auto.
+| style | Opcional | Pasar estilos al iframe.
+| allowfullscreen | Opcional | Propiedad para permitir que ciertas partes del mapa se vean en pantalla completa.
+| loading | Opcional | Por defecto es lazy. Considera cambiarlo si sabes que tu incrustación estará visible inmediatamente.
+| q | Opcional | Define la ubicación del marcador del mapa. Esto puede ser requerido dependiendo del modo del mapa.
+| center | Opcional | Define el centro de la vista del mapa.
+| zoom | Opcional | Establece el nivel de zoom inicial del mapa.
+| maptype | Opcional | Define el tipo de mosaicos de mapa a cargar.
+| language | Opcional | Define el idioma a usar para los elementos de la interfaz y para la visualización de etiquetas en los mosaicos del mapa.
+| region | Opcional | Define las fronteras y etiquetas apropiadas a mostrar, basadas en sensibilidades geopolíticas.
+|===
+
+==== Youtube Embed
+
+El componente YouTubeEmbed se puede utilizar para cargar y mostrar un embed de YouTube. Este componente carga más rápido utilizando lite-youtube-embed bajo el capó.
+
+.Un ejemplo de uso de YouTubeEmbed:
+```jsx
+import { YouTubeEmbed } from '@next/third-parties/google'
+ 
+export default function Page() {
+  return <YouTubeEmbed videoid="ogfYd705cRs" height={400} params="controls=0" />
+}
+```
+
+.Las opciones para pasar a YouTubeEmbed son:
+|===
+| Nombre | Tipo | Descripción
+
+| videoid | Requerido | ID del video de YouTube.
+| width | Opcional | Ancho del contenedor del video. Por defecto es auto.
+| height | Opcional | Altura del contenedor del video. Por defecto es auto.
+| playlabel | Opcional | Una etiqueta visualmente oculta para el botón de reproducción para accesibilidad.
+| params | Opcional | Los parámetros del reproductor de video definidos aquí. Los parámetros se pasan como una cadena de consulta. Ejemplo: params="controls=0&start=10&end=30"
+| style | Opcional | Utilizado para aplicar estilos al contenedor del video.
+|===
