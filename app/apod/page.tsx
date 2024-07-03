@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Apod, IApod } from '../models/apod';
 import ApodComponent from './apod';
+import { key } from 'app/utils/constants';
 
 async function getData(): Promise<IApod> {
-    const API_KEY = 'DEMO_KEY'; // Reemplaza con tu API key de la NASA
+    const API_KEY = key; // Reemplaza con tu API key de la NASA
     const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`;
     let data: any = {};
     try {

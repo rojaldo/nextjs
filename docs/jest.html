@@ -432,6 +432,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/github.min.css">
 </head>
 <body class="article">
 <div id="header">
@@ -455,13 +456,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">Puedes instalar Jest usando npm:</div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">npm install --save-dev jest</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">npm install --save-dev jest</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Para configurar Jest en tu proyecto, debes agregar un script en tu archivo <code>package.json</code>:</div>
 <div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">"scripts": {
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">"scripts": {
   "test": "jest"
 }</code></pre>
 </div>
@@ -469,7 +470,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">El archivo de configuración de Jest debe llamarse <code>jest.config.js</code> y debe estar en la raíz de tu proyecto:</div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">module.exports = {
+<pre class="highlightjs highlight"><code class="language-javascript hljs" data-lang="javascript">module.exports = {
   testEnvironment: 'node',
 };</code></pre>
 </div>
@@ -485,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">Un ejemplo de prueba:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">function sum(a: number, b: number): number {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">function sum(a: number, b: number): number {
   return a + b;
 }
 
@@ -580,7 +581,7 @@ test('adds 1 + 2 to equal 3', () =&gt; {
 <div class="listingblock">
 <div class="title">Para organizar tus pruebas, puedes agruparlas en bloques usando las funciones <code>describe</code> y <code>it</code>:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">describe('sum', () =&gt; {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">describe('sum', () =&gt; {
   it('adds 1 + 2 to equal 3', () =&gt; {
     expect(sum(1, 2)).toBe(3);
   });
@@ -611,7 +612,7 @@ Cada bloque <code>describe</code> puede contener varios bloques <code>it</code> 
 <div class="listingblock">
 <div class="title">Un ejemplo de estructura de testing:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">describe('sum', () =&gt; {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">describe('sum', () =&gt; {
   let a: number;
   let b: number;
 
@@ -693,7 +694,7 @@ Cada bloque <code>describe</code> puede contener varios bloques <code>it</code> 
 <div class="listingblock">
 <div class="title">Para probar código asincrónico con callbacks, debes usar la función <code>done</code>:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">function fetchData(callback: (data: string) =&gt; void) {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">function fetchData(callback: (data: string) =&gt; void) {
   setTimeout(() =&gt; {
     callback('pepe');
   }, 1000);
@@ -712,7 +713,7 @@ test('the data is pepe', (done) =&gt; {
 <div class="listingblock">
 <div class="title">Para probar código asincrónico con promesas, debes usar la palabra clave <code>async</code> y la función <code>await</code>:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">function fetchData(): Promise&lt;string&gt; {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">function fetchData(): Promise&lt;string&gt; {
   return new Promise((resolve) =&gt; {
     setTimeout(() =&gt; {
       resolve('pepe');
@@ -729,7 +730,7 @@ test('the data is pepe', async () =&gt; {
 <div class="listingblock">
 <div class="title">Para probar código asincrónico con promesas, también puedes usar <code>resolves</code> y <code>rejects</code>:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">function fetchData(): Promise&lt;string&gt; {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">function fetchData(): Promise&lt;string&gt; {
   return new Promise((resolve) =&gt; {
     setTimeout(() =&gt; {
       resolve('pepe');
@@ -757,7 +758,7 @@ test('the fetch fails with an error', () =&gt; {
 <div class="listingblock">
 <div class="title">Para mockear una función, debes usar la función <code>jest.fn()</code>:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">function fetchData(callback: (data: string) =&gt; void) {
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">function fetchData(callback: (data: string) =&gt; void) {
   setTimeout(() =&gt; {
     callback('pepe');
   }, 1000);
@@ -794,7 +795,7 @@ test('the data is pepe', () =&gt; {
 <div class="listingblock">
 <div class="title">Ejemplo de uso de mocks:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const myMock1 = jest.fn();
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">const myMock1 = jest.fn();
 const a = new myMock1();
 console.log(myMock1.mock.instances);
 // &gt; [ &lt;a&gt; ]
@@ -810,7 +811,7 @@ console.log(myMock2.mock.contexts);
 <div class="listingblock">
 <div class="title">Estos miembros de mock son muy útiles en las pruebas para afirmar cómo se llaman estas funciones, se instancian o qué devuelven:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// The function was called exactly once
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">// The function was called exactly once
 expect(someMockFunction.mock.calls).toHaveLength(1);
 
 // The first arg of the first call to the function was 'first arg'
@@ -839,7 +840,7 @@ expect(someMockFunction.mock.lastCall[0]).toBe('test');</code></pre>
 <div class="listingblock">
 <div class="title">Return mock values:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">const myMock = jest.fn();
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">const myMock = jest.fn();
 console.log(myMock());
 // &gt; undefined
 
@@ -852,7 +853,7 @@ console.log(myMock(), myMock(), myMock(), myMock());
 <div class="listingblock">
 <div class="title">Mocking de módulos:</div>
 <div class="content">
-<pre class="highlight"><code class="language-typescript" data-lang="typescript">// user.ts
+<pre class="highlightjs highlight"><code class="language-typescript hljs" data-lang="typescript">// user.ts
 import axios from 'axios';
 
 class Users {
@@ -887,8 +888,15 @@ test('should fetch users', () =&gt; {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-03 13:56:19 +0200
+Last updated 2024-07-03 14:24:23 +0200
 </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code[data-lang]')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 </body>
 </html>
