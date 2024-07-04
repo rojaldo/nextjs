@@ -41,13 +41,6 @@ const ApodComponent: React.FC<ApodProps> = ({ apod }) =>  {
     
     return ( 
         <section>
-            <button
-                type="button"
-                className="btn btn-primary"
-            >
-                Button
-            </button>
-            
             <input type="date" onChange={(value)=>{fetchApod(value)} } />
             <div className="row align-items-md-stretch">
                 <div className="col-md-12">

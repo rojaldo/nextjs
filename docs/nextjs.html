@@ -545,7 +545,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_fundamentos_de_rutado">Fundamentos de rutado</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>El esqueleto de cada aplicación es el enrutamiento. Esta página le presentará los conceptos fundamentales del enrutamiento para la web y cómo manejar el enrutamiento en Next.js.</p>
+<p>El esqueleto de cada aplicación es el enrutamiento. Next.js utiliza un enrutador basado en el sistema de archivos que le permite definir rutas y estructuras de carpetas para crear una interfaz de usuario.</p>
 </div>
 <div class="sect2">
 <h3 id="_terminología">Terminología</h3>
@@ -1130,7 +1130,7 @@ export default function GlobalError({
 <div class="sect2">
 <h3 id="_pages_y_layouts">Pages y layouts</h3>
 <div class="paragraph">
-<p>Los archivos especiales layout.tsx, page.tsx y template.tsx le permiten crear una interfaz de usuario para una ruta. Esta página le guiará sobre cómo y cuándo usar estos archivos especiales.</p>
+<p>Los archivos especiales layout.tsx, page.tsx y template.tsx le permiten crear una interfaz de usuario para una ruta.</p>
 </div>
 <div class="sect3">
 <h4 id="_pages">Pages</h4>
@@ -2812,7 +2812,7 @@ export const config = {
 <h2 id="_data_fetching">Data Fetching</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Data fetching es una parte fundamental de cualquier aplicación. Esta página explica cómo puedes obtener, almacenar en caché y volver a validar datos en React y Next.js.</p>
+<p>Data fetching es una parte fundamental de cualquier aplicación. Next.js proporciona una variedad de formas de obtener datos en tus aplicaciones, incluyendo la obtención de datos en el servidor, en el cliente y en la compilación.</p>
 </div>
 <div class="ulist">
 <div class="title">Hay cuatro formas de obtener datos:</div>
@@ -2832,7 +2832,7 @@ export const config = {
 </ul>
 </div>
 <div class="paragraph">
-<p>Next.js extiende la API web fetch nativa para permitirte configurar el comportamiento de almacenamiento en caché y revalidación para cada solicitud de fetch en el servidor. React extiende fetch para memoizar automáticamente las solicitudes de fetch mientras renderiza un árbol de componentes de React.</p>
+<p>Next.js extiende la API web fetch nativa para permitirte configurar el comportamiento de almacenamiento en caché y revalidación para cada solicitud de fetch en el servidor. React extiende fetch para memorizar automáticamente las solicitudes de fetch mientras renderiza un árbol de componentes de React.</p>
 </div>
 <div class="ulist">
 <div class="title">Se puede utilizar fetch con async/await en Componentes del Servidor, en Route Handlers y en Acciones del Servidor.</div>
@@ -3423,7 +3423,7 @@ export default function MyClientComponent() {
 <h2 id="_cache">Cache</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Next.js mejora el rendimiento de la aplicación y reduce costes al almacenar en caché el trabajo de renderizado y las solicitudes de datos. Esta página proporciona una visión detallada de los mecanismos de almacenamiento en caché de Next.js, las API que puedes utilizar para configurarlos y cómo interactúan entre sí.</p>
+<p>Next.js mejora el rendimiento de la aplicación y reduce costes al almacenar en caché el trabajo de renderizado y las solicitudes de datos. Next.js proporciona una variedad de mecanismos de almacenamiento en caché para ayudarte a gestionar el almacenamiento en caché de tus rutas y datos de forma eficiente.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. Aquí hay una descripción general de los diferentes mecanismos de almacenamiento en caché y su propósito:</caption>
@@ -3480,7 +3480,7 @@ export default function MyClientComponent() {
 <div class="sect2">
 <h3 id="_request_memoization">Request Memoization</h3>
 <div class="paragraph">
-<p>React extiende la API fetch para memoizar automáticamente las solicitudes que tienen la misma URL y opciones. Esto significa que puedes llamar a una función fetch para los mismos datos en múltiples lugares en un árbol de componentes de React y solo ejecutarla una vez.</p>
+<p>React extiende la API fetch para memorizar automáticamente las solicitudes que tienen la misma URL y opciones. Esto significa que puedes llamar a una función fetch para los mismos datos en múltiples lugares en un árbol de componentes de React y solo ejecutarla una vez.</p>
 </div>
 <div class="paragraph">
 <p>Por ejemplo, si hay que utilizar los mismos datos en una ruta (por ejemplo, en un Layout, Page y múltiples componentes), no es necesario obtener los datos en la parte superior del árbol y reenviar props entre componentes. En su lugar, puedes obtener los datos en los componentes que los necesitan sin preocuparte por las implicaciones de rendimiento de hacer múltiples solicitudes a través de la red para los mismos datos.</p>
@@ -3515,13 +3515,13 @@ const item = await getItem() // cache HIT</code></pre>
 <p>Las llamadas de función subsiguientes de la solicitud en el mismo pase de renderizado serán un cache HIT, y los datos se devolverán de la memoria sin ejecutar la función.</p>
 </li>
 <li>
-<p>Una vez que se ha renderizado la ruta y se ha completado el pase de renderizado, la memoria se "restablece" y todas las entradas de memoización de solicitud se borran.</p>
+<p>Una vez que se ha renderizado la ruta y se ha completado el pase de renderizado, la memoria se "restablece" y todas las entradas de memorización de solicitud se borran.</p>
 </li>
 <li>
-<p>La memoización de solicitudes es una característica de React, no de Next.js. Se incluye aquí para mostrar cómo interactúa con los otros mecanismos de almacenamiento en caché.</p>
+<p>La memorización de solicitudes es una característica de React, no de Next.js. Se incluye aquí para mostrar cómo interactúa con los otros mecanismos de almacenamiento en caché.</p>
 </li>
 <li>
-<p>La memoización solo se aplica al método GET en las solicitudes de fetch.</p>
+<p>La memorización solo se aplica al método GET en las solicitudes de fetch.</p>
 </li>
 <li>
 <p>Se aplica a las solicitudes de fetch en generateMetadata, generateStaticParams, Layouts, Pages y otros Componentes del Servidor.</p>
@@ -3530,13 +3530,13 @@ const item = await getItem() // cache HIT</code></pre>
 <p>No se aplica a las solicitudes de fetch en Route Handlers, ya que no forman parte del árbol de componentes de React.</p>
 </li>
 <li>
-<p>Para casos en los que fetch no es adecuado (por ejemplo, algunos clientes de bases de datos, clientes de CMS o clientes de GraphQL), puedes utilizar la función de caché de React para memoizar funciones.</p>
+<p>Para casos en los que fetch no es adecuado (por ejemplo, algunos clientes de bases de datos, clientes de CMS o clientes de GraphQL), puedes utilizar la función de caché de React para memorizar funciones.</p>
 </li>
 <li>
 <p>La memoria caché dura toda la vida de una solicitud de servidor hasta que el árbol de componentes de React haya terminado de renderizarse.</p>
 </li>
 <li>
-<p>Dado que la memoización no se comparte entre las solicitudes del servidor y solo se aplica durante el renderizado, no es necesario revalidarla.</p>
+<p>Dado que la memorización no se comparte entre las solicitudes del servidor y solo se aplica durante el renderizado, no es necesario revalidarla.</p>
 </li>
 <li>
 <p>La memorización sólo se aplica al método GET en las solicitudes de fetch, otros métodos, como POST y DELETE, no se memorizan. Este comportamiento predeterminado es una optimización de React y no recomendamos optar por no utilizarlo.</p>
@@ -3544,7 +3544,7 @@ const item = await getItem() // cache HIT</code></pre>
 </ul>
 </div>
 <div class="listingblock">
-<div class="title">Para gestionar solicitudes individuales, puedes utilizar la propiedad signal de AbortController. Sin embargo, esto no excluirá las solicitudes de la memoización, sino que abortará las solicitudes en curso.</div>
+<div class="title">Para gestionar solicitudes individuales, puedes utilizar la propiedad signal de AbortController. Sin embargo, esto no excluirá las solicitudes de la memorización, sino que abortará las solicitudes en curso.</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">const { signal } = new AbortController()
 fetch(url, { signal })</code></pre>
@@ -3569,16 +3569,16 @@ fetch(url, { signal })</code></pre>
 <p>La primera vez que se llama a una solicitud de fetch durante el renderizado, Next.js comprueba la Data Cache en busca de una respuesta en caché.</p>
 </li>
 <li>
-<p>Si se encuentra una respuesta en caché, se devuelve inmediatamente y se memoiza.</p>
+<p>Si se encuentra una respuesta en caché, se devuelve inmediatamente y se memoriza.</p>
 </li>
 <li>
-<p>Si no se encuentra una respuesta en caché, se realiza la solicitud al origen de datos, el resultado se almacena en la Data Cache y se memoiza.</p>
+<p>Si no se encuentra una respuesta en caché, se realiza la solicitud al origen de datos, el resultado se almacena en la Data Cache y se memoriza.</p>
 </li>
 <li>
-<p>Para los datos sin caché (por ejemplo, { cache: 'no-store' }), el resultado siempre se obtiene del origen de datos y se memoiza.</p>
+<p>Para los datos sin caché (por ejemplo, { cache: 'no-store' }), el resultado siempre se obtiene del origen de datos y se memoriza.</p>
 </li>
 <li>
-<p>Ya sea que los datos estén en caché o no, las solicitudes siempre se memoizan para evitar hacer solicitudes duplicadas por los mismos datos durante un pase de renderizado de React.</p>
+<p>Ya sea que los datos estén en caché o no, las solicitudes siempre se memorizan para evitar hacer solicitudes duplicadas por los mismos datos durante un pase de renderizado de React.</p>
 </li>
 <li>
 <p>Data Cache es persistente a través de las solicitudes entrantes y los despliegues a menos que revalide o opte por no hacerlo.</p>
@@ -3659,8 +3659,7 @@ fetch('https://...', { next: { revalidate: 3600 } })</code></pre>
 <p>Esto significa que no tenemos que esperar a que todo se renderice antes de almacenar en caché el trabajo o enviar una respuesta. En su lugar, podemos transmitir una respuesta a medida que se completa el trabajo.</p>
 </div>
 <div class="paragraph">
-<p>What is the React Server Component Payload?
-Qué es el Payload de Componente del Servidor de React?</p>
+<p>Qué es el Payload de Componente del Servidor de React?</p>
 </div>
 <div class="paragraph">
 <p>El Payload de Componente del Servidor de React es una representación binaria compacta del árbol de Componentes del Servidor de React renderizado. Se utiliza por React en el cliente para actualizar el DOM del navegador.</p>
@@ -3720,7 +3719,7 @@ Qué es el Payload de Componente del Servidor de React?</p>
 <div class="sect4">
 <h5 id="_renderizado_estático_y_dinámico">Renderizado Estático y Dinámico</h5>
 <div class="paragraph">
-<p>Mientras que una ruta está en caché o no en el tiempo de construcción depende de si se renderiza estática o dinámicamente. Las rutas estáticas se almacenan en caché de forma predeterminada, mientras que las rutas dinámicas se renderizan en el momento de la solicitud y no se almacenan en caché.</p>
+<p>Cuando la ruta está en caché o no en el tiempo de construcción depende de si se renderiza estática o dinámicamente. Las rutas estáticas se almacenan en caché de forma predeterminada, mientras que las rutas dinámicas se renderizan en el momento de la solicitud y no se almacenan en caché.</p>
 </div>
 <div class="paragraph">
 <p>Por defecto, la Caché de Ruta Completa es persistente. Esto significa que la salida del renderizado se almacena en caché a través de las solicitudes de los usuarios.</p>
@@ -3787,21 +3786,12 @@ Qué es el Payload de Componente del Servidor de React?</p>
 <div class="title">Dos factores determinan cuánto tiempo dura la caché del enrutador:</div>
 <ul>
 <li>
-<p>Session: The cache persists across navigation. However, it&#8217;s cleared on page refresh.</p>
-</li>
-<li>
 <p>Sesión: La caché persiste a través de la navegación. Sin embargo, se borra al refrescar la página.</p>
-</li>
-<li>
-<p>Automatic Invalidation Period: The cache of an individual segment is automatically invalidated after a specific time. The duration depends on how the resource was prefetched:</p>
 </li>
 <li>
 <p>Periodo de Invalidez Automática: La caché de un segmento individual se invalida automáticamente después de un tiempo específico. La duración depende de cómo se haya precargado el recurso:</p>
 <div class="ulist">
 <ul>
-<li>
-<p>Default Prefetching (prefetch={null} o sin especificar): 30 segundos</p>
-</li>
 <li>
 <p>Full Prefetching: (prefetch={true} o router.prefetch): 5 minutos</p>
 </li>
@@ -4099,8 +4089,7 @@ export default function Page() {
 <div class="sect3">
 <h4 id="_image_sizing">Image sizing</h4>
 <div class="paragraph">
-<p>One of the ways that images most commonly hurt performance is through layout shift, where the image pushes other elements around on the page as it loads in. This performance problem is so annoying to users that it has its own Core Web Vital, called Cumulative Layout Shift. The way to avoid image-based layout shifts is to always size your images. This allows the browser to reserve precisely enough space for the image before it loads.
-Una de las formas más comunes en que las imágenes afectan al rendimiento es a través del cambio de layout, donde la imagen empuja a otros elementos alrededor de la página mientras se carga. Este problema de rendimiento es tan molesto para los usuarios que tiene su propio Core Web Vital, llamado Cambio de layout Acumulativo. La forma de evitar los cambios de layout basados en imágenes es siempre dimensionar tus imágenes. Esto permite al navegador reservar exactamente el espacio suficiente para la imagen antes de que se cargue.</p>
+<p>Una de las formas más comunes en que las imágenes afectan al rendimiento es a través del cambio de layout, donde la imagen empuja a otros elementos alrededor de la página mientras se carga. Este problema de rendimiento es tan molesto para los usuarios que tiene su propio Core Web Vital, llamado Cambio de layout Acumulativo. La forma de evitar los cambios de layout basados en imágenes es siempre dimensionar tus imágenes. Esto permite al navegador reservar exactamente el espacio suficiente para la imagen antes de que se cargue.</p>
 </div>
 <div class="ulist">
 <div class="title">Porque next/image está diseñado para garantizar buenos resultados de rendimiento, no se puede utilizar de una manera que contribuya al cambio de layout, y debe dimensionarse de una de las tres formas:</div>
@@ -5531,10 +5520,333 @@ export default function Page() {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_autenticación">Autenticación</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Next.js proporciona una API de autenticación que te permite autenticar a los usuarios en tu aplicación. Puedes utilizar esta API para implementar la autenticación de usuarios, la autorización de rutas y la gestión de sesiones.</p>
+</div>
+<div class="ulist">
+<div class="title">Para implementar la autenticación en Next.js, familiarízate con tres conceptos fundamentales:</div>
+<ul>
+<li>
+<p><strong>Autenticación</strong> verifica si el usuario es quien dice ser. Requiere que el usuario demuestre su identidad con algo que tiene, como un nombre de usuario y una contraseña.</p>
+</li>
+<li>
+<p><strong>Gestión de Sesión</strong> rastrea el estado del usuario (por ejemplo, conectado) a través de múltiples solicitudes.</p>
+</li>
+<li>
+<p><strong>Autorización</strong> decide a qué partes de la aplicación tiene acceso el usuario.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_autenticación_2">Autenticación</h3>
+<div class="paragraph">
+<p>La autenticación verifica la identidad de un usuario. Esto sucede cuando un usuario inicia sesión, ya sea con un nombre de usuario y una contraseña o a través de un servicio como Google. Se trata de confirmar que los usuarios son realmente quienes dicen ser, protegiendo tanto los datos del usuario como la aplicación de accesos no autorizados o actividades fraudulentas.</p>
+</div>
+<div class="ulist">
+<div class="title">Estrategias de Autenticación en aplicaciones web modernas:</div>
+<ul>
+<li>
+<p><strong>OAuth/OpenID Connect:</strong> Permite el acceso de terceros sin compartir credenciales de usuario. Ideal para iniciar sesión en redes sociales y soluciones de inicio de sesión único (SSO). Agregan una capa de identidad con OpenID Connect.</p>
+</li>
+<li>
+<p><strong>Credenciales basadas en el inicio de sesión (Email + Contraseña):</strong> Una elección estándar para aplicaciones web, donde los usuarios inician sesión con un correo electrónico y una contraseña. Familiar y fácil de implementar, requiere medidas de seguridad sólidas contra amenazas como el phishing.</p>
+</li>
+<li>
+<p><strong>Autenticación sin contraseña/basada en tokens:</strong> Utiliza enlaces mágicos de correo electrónico o códigos de un solo uso de SMS para un acceso seguro sin contraseña. Popular por su conveniencia y seguridad mejorada, este método ayuda a reducir la fatiga de contraseñas. Su limitación es la dependencia de la disponibilidad de correo electrónico o teléfono del usuario.</p>
+</li>
+<li>
+<p><strong>Passkeys/WebAuthn:</strong> Utiliza credenciales criptográficas únicas para cada sitio, ofreciendo una alta seguridad contra el phishing. Seguro pero nuevo, esta estrategia puede ser difícil de implementar.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">El proceso de autenticación convencional sigue estos pasos:</div>
+<ul>
+<li>
+<p>El usuario envía sus credenciales a través de un formulario de inicio de sesión.</p>
+</li>
+<li>
+<p>El formulario llama a una acción del servidor.</p>
+</li>
+<li>
+<p>Si la verificación es exitosa, el proceso se completa, indicando la autenticación exitosa del usuario.</p>
+</li>
+<li>
+<p>Si la verificación no tiene éxito, se muestra un mensaje de error.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">El formulario de inicio de sesión es un componente React que recopila las credenciales del usuario y las envía al servidor para su verificación:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">import { authenticate } from '@/app/lib/actions'
+
+export default function Page() {
+  return (
+    &lt;form action={authenticate}&gt;
+      &lt;input type="email" name="email" placeholder="Email" required /&gt;
+      &lt;input type="password" name="password" placeholder="Password" required /&gt;
+      &lt;button type="submit"&gt;Login&lt;/button&gt;
+    &lt;/form&gt;
+  )
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Usamos una función de autenticación en una Server Action para demostrar el proceso de autenticación:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">'use server'
+
+ // signIn es una función de autenticación que verifica las credenciales del usuario
+import { signIn } from '@/auth'
+
+export async function authenticate(_currentState: unknown, formData: FormData) {
+  try {
+    await signIn('credentials', formData)
+  } catch (error) {
+    if (error) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.'
+        default:
+          return 'Something went wrong.'
+      }
+    }
+    throw error
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_autorización">Autorización</h3>
+<div class="paragraph">
+<p>La autorización decide qué partes de la aplicación tiene acceso un usuario. Se trata de controlar qué recursos y acciones están disponibles para un usuario autenticado. La autorización se basa en la identidad del usuario y en los roles y permisos asociados.</p>
+</div>
+<div class="paragraph">
+<p>En Next.js tenemos los Middleware para gestionar la autorización de rutas de forma sencilla.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo de Middleware de Ruta:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  const currentUser = request.cookies.get('currentUser')?.value
+
+  if (currentUser &amp;&amp; !request.nextUrl.pathname.startsWith('/dashboard')) {
+    return Response.redirect(new URL('/dashboard', request.url))
+  }
+
+  if (!currentUser &amp;&amp; !request.nextUrl.pathname.startsWith('/login')) {
+    return Response.redirect(new URL('/login', request.url))
+  }
+}
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Es necesario tratar las Server Actions con las mismas consideraciones de seguridad que los endpoints de una API. Hay que implementar comprobaciones dentro de las Server Actions para determinar los permisos de usuario.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo de Server Action con Autorización:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">'use server'
+
+// ...
+
+export async function serverAction() {
+  const session = await getSession()
+  const userRole = session?.user?.role
+
+  // Check if user is authorized to perform the action
+  if (userRole !== 'admin') {
+    throw new Error('Unauthorized access: User does not have admin privileges.')
+  }
+
+  // Proceed with the action for authorized users
+  // ... implementation of the action
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Los Route Handlers en Next.js desempeñan tareas en la gestión de las solicitudes entrantes. Al igual que las Server Actions, deben estar aseguradas para garantizar que solo los usuarios autorizados puedan acceder a ciertas funcionalidades. Esto a menudo implica verificar el estado de autenticación del usuario y sus permisos.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo de Route Handler con Autorización:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">export async function GET() {
+  // User authentication and role verification
+  const session = await getSession()
+
+  // Check if the user is authenticated
+  if (!session) {
+    return new Response(null, { status: 401 }) // User is not authenticated
+  }
+
+  // Check if the user has the 'admin' role
+  if (session.user.role !== 'admin') {
+    return new Response(null, { status: 403 }) // User is authenticated but does not have the right permissions
+  }
+
+  // Data fetching for authorized users
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Los Server Components permiten a los desarrolladores controlar la lógica de autorización en el servidor, lo que garantiza que los datos sensibles no se envíen a los Client Components.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo de Server Component con Autorización:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">export default async function Dashboard() {
+  const session = await getSession()
+  const userRole = session?.user?.role // Assuming 'role' is part of the session object
+
+  if (userRole === 'admin') {
+    return &lt;AdminDashboard /&gt; // Component for admin users
+  } else if (userRole === 'user') {
+    return &lt;UserDashboard /&gt; // Component for regular users
+  } else {
+    return &lt;AccessDenied /&gt; // Component shown for unauthorized access
+  }
+}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<div class="title">Mejores Prácticas</div>
+<ul>
+<li>
+<p><strong>Securiza la gestión de sesiones:</strong> Prioriza la seguridad de los datos de sesión para evitar el acceso no autorizado y las violaciones de datos. Utiliza prácticas de cifrado y almacenamiento seguro.</p>
+</li>
+<li>
+<p><strong>Gestión dinámica de roles:</strong> Utiliza un sistema flexible para los roles de usuario para ajustarte fácilmente a los cambios en los permisos y roles, evitando roles codificados.</p>
+</li>
+<li>
+<p><strong>Enfoque de seguridad primero:</strong> En todos los aspectos de la lógica de autorización, prioriza la seguridad para proteger los datos de los usuarios y mantener la integridad de tu aplicación. Esto incluye pruebas exhaustivas y considerar posibles vulnerabilidades de seguridad.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gestión_de_sesiones">Gestión de Sesiones</h3>
+<div class="paragraph">
+<p>La gestión de sesiones implica el seguimiento y la gestión de la interacción de un usuario con la aplicación a lo largo del tiempo, garantizando que su estado autenticado se preserve en diferentes partes de la aplicación.</p>
+</div>
+<div class="sect3">
+<h4 id="_sesiones_basadas_en_cookies">Sesiones basadas en cookies</h4>
+<div class="paragraph">
+<p>Las sesiones basadas en cookies son una forma común de gestionar la autenticación y la autorización en aplicaciones web modernas. Almacenan información de sesión cifrada directamente en las cookies del navegador, lo que permite a los usuarios mantener su estado autenticado en diferentes partes de la aplicación.</p>
+</div>
+<div class="listingblock">
+<div class="title">Configurar una cookie en un Server Component:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">'use server'
+
+import { cookies } from 'next/headers'
+
+export async function handleLogin(sessionData) {
+  const encryptedSessionData = encrypt(sessionData) // Encrypt your session data
+  cookies().set('session', encryptedSessionData, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7, // One week
+    path: '/',
+  })
+  // Redirect or handle the response after setting the cookie
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">La función getSession en un Server Component:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">import { cookies } from 'next/headers'
+
+export async function getSessionData(req) {
+  const encryptedSessionData = cookies().get('session')?.value
+  return encryptedSessionData ? JSON.parse(decrypt(encryptedSessionData)) : null
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gestión_de_sesiones_en_bases_de_datos">Gestión de Sesiones en bases de datos</h4>
+<div class="paragraph">
+<p>La gestión de sesiones en bases de datos implica almacenar los datos de sesión en el servidor, con el navegador del usuario recibiendo solo un ID de sesión. Este ID hace referencia a los datos de sesión almacenados en el servidor, sin contener los datos en sí. Este método mejora la seguridad, ya que mantiene los datos de sesión sensibles alejados del entorno del lado del cliente, reduciendo el riesgo de exposición a ataques del lado del cliente. Las sesiones de base de datos también son más escalables, ya que pueden acomodar necesidades de almacenamiento de datos más grandes.</p>
+</div>
+<div class="listingblock">
+<div class="title">Ejemplo de gestión de sesiones en bases de datos:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">import db from './lib/db'
+
+export async function createSession(user) {
+  const sessionId = generateSessionId() // Generate a unique session ID
+  await db.insertSession({ sessionId, userId: user.id, createdAt: new Date() })
+  return sessionId
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Para obtener una sesión en un Middleware o en la lógica del lado del servidor:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-jsx hljs" data-lang="jsx">import { cookies } from 'next/headers'
+import db from './lib/db'
+
+export async function getSession() {
+  const sessionId = cookies().get('sessionId')?.value
+  return sessionId ? await db.findSession(sessionId) : null
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_librerías_de_autenticación">Librerías de Autenticación</h4>
+<div class="paragraph">
+<p>Con las soluciones de autenticación como NextAuth.js, la gestión de sesiones se vuelve más eficiente, utilizando cookies o almacenamiento en base de datos. Esta automatización simplifica el proceso de desarrollo, pero es importante entender el método de gestión de sesiones utilizado por la solución elegida. Asegúrate de que se alinee con los requisitos de seguridad y rendimiento de tu aplicación.</p>
+</div>
+<div class="ulist">
+<div class="title">Aquí hay una lista de soluciones de autenticación compatibles con Next.js:</div>
+<ul>
+<li>
+<p><a href="https://authjs.dev/getting-started/migrating-to-v5">NextAuth.js</a></p>
+</li>
+<li>
+<p><a href="https://auth0.com/docs/quickstart/webapp/nextjs/01-login">Auth0</a></p>
+</li>
+<li>
+<p><a href="https://clerk.com/docs/quickstarts/nextjs">Clerk</a></p>
+</li>
+<li>
+<p><a href="https://docs.kinde.com/developer-tools/sdks/backend/nextjs-sdk/">Kinde</a></p>
+</li>
+<li>
+<p><a href="https://lucia-auth.com/getting-started/nextjs-app">Lucia</a></p>
+</li>
+<li>
+<p><a href="https://supabase.com/docs/guides/getting-started/quickstarts/nextjs">Supabase</a></p>
+</li>
+<li>
+<p><a href="https://stytch.com/docs/guides/quickstarts/nextjs">Stytch</a></p>
+</li>
+<li>
+<p><a href="https://github.com/vvo/iron-session">Iron Session</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-02 15:38:30 +0200
+Last updated 2024-07-04 07:15:14 +0200
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
