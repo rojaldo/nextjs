@@ -22,16 +22,21 @@ const TrivialCard: React.FC<CardProps> = ({ card }) =>  {
         });
 
         // set all classes to secondary
-        setButtonClass(['btn btn-secondary', 'btn btn-secondary', 'btn btn-secondary', 'btn btn-secondary']);
+        let myArray = buttonClass;
+        for (let i = 0; i < myArray.length; i++) {
+            myArray[i] = 'btn btn-secondary';
+        }
 
         for (let i = 0; i < cardData.answers.length; i++) {
             if (cardData.answers[i] === answer) {
-                setButtonClass([...buttonClass.slice(0, i), 'btn btn-danger', ...buttonClass.slice(i + 1)]);
+                myArray[i] = 'btn btn-danger';
             }
             if (cardData.answers[i] === cardData.correctAnswer) {
-                setButtonClass([...buttonClass.slice(0, i), 'btn btn-success', ...buttonClass.slice(i + 1)]);
+                myArray[i] = 'btn btn-success';
             } 
         }
+
+        setButtonClass(myArray);
         
     }
     
