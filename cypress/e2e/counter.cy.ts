@@ -1,6 +1,6 @@
 require('@cypress/xpath');
 
-xdescribe('counter test', () => {
+describe('counter test', () => {
     it('passes', () => {
         cy.visit('localhost:3000/counter')
         //check if the counter is 0
