@@ -48,28 +48,30 @@ test('adds 1 + 2 to equal 3', () => {
 Los matchers son funciones que te permiten comprobar si un valor cumple con ciertas condiciones. 
 
 .Los matchers más comunes son:
-- `toBe(value)`: Comprueba si el valor es igual a `value`.
-- `toEqual(value)`: Comprueba si el valor es igual a `value` recursivamente.
-- `toBeTruthy()`: Comprueba si el valor es verdadero.
-- `toBeFalsy()`: Comprueba si el valor es falso.
-- `toBeNull()`: Comprueba si el valor es nulo.
-- `toBeUndefined()`: Comprueba si el valor es indefinido.
-- `toBeDefined()`: Comprueba si el valor está definido.
-- `toContain(value)`: Comprueba si el valor contiene `value`. Siendo `value` un array o un string.
-- `toHaveLength(length)`: Comprueba si el valor tiene la longitud `length`.
-- `toBeGreaterThan(value)`: Comprueba si el valor es mayor que `value`.
-- `toBeLessThan(value)`: Comprueba si el valor es menor que `value`.
-- `toBeCloseTo(value, precision)`: Comprueba si el valor es cercano a `value` con una precisión de `precision`.
-- `toThrow()`: Comprueba si el valor lanza una excepción.
-- `toMatch(regexp)`: Comprueba si el valor coincide con la expresión regular `regexp`.
-- `toBeInstanceOf(class)`: Comprueba si el valor es una instancia de la clase `class`.
-- `toHaveProperty(keyPath, value)`: Comprueba si el valor tiene la propiedad `keyPath` con el valor `value`.
+* `toBe(value)`: Comprueba si el valor es igual a `value`.
+* `toEqual(value)`: Comprueba si el valor es igual a `value` recursivamente.
+* `toBeTruthy()`: Comprueba si el valor es verdadero.
+* `toBeFalsy()`: Comprueba si el valor es falso.
+* `toBeNull()`: Comprueba si el valor es nulo.
+* `toBeUndefined()`: Comprueba si el valor es indefinido.
+* `toBeDefined()`: Comprueba si el valor está definido.
+* `toContain(value)`: Comprueba si el valor contiene `value`. Siendo `value` un array o un string.
+* `toHaveLength(length)`: Comprueba si el valor tiene la longitud `length`.
+* `toBeGreaterThan(value)`: Comprueba si el valor es mayor que `value`.
+* `toBeLessThan(value)`: Comprueba si el valor es menor que `value`.
+* `toBeCloseTo(value, precision)`: Comprueba si el valor es cercano a `value` con una precisión de `precision`.
+* `toThrow()`: Comprueba si el valor lanza una excepción.
+* `toMatch(regexp)`: Comprueba si el valor coincide con la expresión regular `regexp`.
+* `toBeInstanceOf(class)`: Comprueba si el valor es una instancia de la clase `class`.
+* `toHaveProperty(keyPath, value)`: Comprueba si el valor tiene la propiedad `keyPath` con el valor `value`.
 
 .Combinaciones con expect:
-- `expect(value).not.toBe(value)`: Comprueba si el valor no es igual a `value`.
-- `expect(() => compileAndroidCode()).toThrow();
-- `expect(() => compileAndroidCode()).toThrow(Error);
-- `expect(() => compileAndroidCode()).toThrow('You are using the wrong JDK');`
+```typescript
+`expect(value).not.toBe(value)`: Comprueba si el valor no es igual a `value`.
+`expect(() => compileAndroidCode()).toThrow();
+`expect(() => compileAndroidCode()).toThrow(Error);
+`expect(() => compileAndroidCode()).toThrow('You are using the wrong JDK');`
+```
 
 == Estructura de testing en Jest
 
@@ -86,10 +88,10 @@ El bloque `describe` agrupa las pruebas y el bloque `it` define una prueba.
 Cada bloque `describe` puede contener varios bloques `it` y otros bloques `describe`.
 
 .Además de los bloques `describe` y `it`, Jest proporciona las funciones:
-- `beforeAll(fn)`: Se ejecuta una vez antes de todas las pruebas.
-- `beforeEach(fn)`: Se ejecuta antes de cada prueba.
-- `afterEach(fn)`: Se ejecuta después de cada prueba.
-- `afterAll(fn)`: Se ejecuta una vez después de todas las pruebas.
+* `beforeAll(fn)`: Se ejecuta una vez antes de todas las pruebas.
+* `beforeEach(fn)`: Se ejecuta antes de cada prueba.
+* `afterEach(fn)`: Se ejecuta después de cada prueba.
+* `afterAll(fn)`: Se ejecuta una vez después de todas las pruebas.
 
 .Un ejemplo de estructura de testing:
 ```typescript
@@ -125,14 +127,14 @@ describe('sum', () => {
 ```
 
 .El código anterior se ejecutará de la siguiente manera:
-- `beforeAll` se ejecuta una vez antes de todas las pruebas.
-- `beforeEach` se ejecuta antes de cada prueba.
-- `it` ejecuta la primera prueba.
-- `afterEach` se ejecuta después de cada prueba.
-- `beforeEach` se ejecuta antes de la segunda prueba.
-- `it` ejecuta la segunda prueba.
-- `afterEach` se ejecuta después de cada prueba.
-- `afterAll` se ejecuta una vez después de todas las pruebas.
+* `beforeAll` se ejecuta una vez antes de todas las pruebas.
+* `beforeEach` se ejecuta antes de cada prueba.
+* `it` ejecuta la primera prueba.
+* `afterEach` se ejecuta después de cada prueba.
+* `beforeEach` se ejecuta antes de la segunda prueba.
+* `it` ejecuta la segunda prueba.
+* `afterEach` se ejecuta después de cada prueba.
+* `afterAll` se ejecuta una vez después de todas las pruebas.
 
 == Testing con código asincrónico
 
@@ -213,10 +215,10 @@ test('the data is pepe', () => {
 ```
 
 .Los métodos más comunes de un mock son:
-- `mock.calls`: Un array que contiene los argumentos de cada llamada.
-- `mock.results`: Un array que contiene los resultados de cada llamada.
-- `mock.calls[0][0]`: El primer argumento de la primera llamada.
-- `mock.results[0].value`: El valor de retorno de la primera llamada.
+* `mock.calls`: Un array que contiene los argumentos de cada llamada.
+* `mock.results`: Un array que contiene los resultados de cada llamada.
+* `mock.calls[0][0]`: El primer argumento de la primera llamada.
+* `mock.results[0].value`: El valor de retorno de la primera llamada.
 
 Todas las funciones de mock tienen esta propiedad especial .mock, que es donde se guarda la información sobre cómo se ha llamado la función y qué ha devuelto la función. La propiedad .mock también realiza un seguimiento del valor de this para cada llamada, por lo que es posible inspeccionar esto también.
 
