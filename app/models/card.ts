@@ -6,6 +6,7 @@ export interface ICard {
     correctAnswer: string;
     incorrectAnswers: string[];
     answers: string[];
+    answered: boolean;
 }
 
 export class Card implements ICard {
@@ -16,6 +17,7 @@ export class Card implements ICard {
     private _correctAnswer = '';
     private _incorrectAnswers: string[] = [];
     private _answers: string[] = [];
+    private _answered = false;
 
     constructor(json: any) {
         this._type = json.type;
@@ -55,6 +57,14 @@ export class Card implements ICard {
         return this._category;
     }
 
+    get answered() {
+        return this._answered;
+    }
+
+    set answered(value: boolean) {
+        this._answered = value;
+    }
+
     shuffleAnswers() {
         this._answers = this._answers.sort(() => Math.random() - 0.5);
     }
@@ -67,7 +77,8 @@ export class Card implements ICard {
             question: this._question,
             correctAnswer: this._correctAnswer,
             incorrectAnswers: this._incorrectAnswers,
-            answers: this._answers
+            answers: this._answers,
+            answered: this._answered
         };
     }
     

@@ -1,6 +1,8 @@
 'use client';
 
 import { Card, ICard } from "app/models/card";
+import { set } from "node_modules/cypress/types/lodash";
+import { useState } from "react";
 
 
 interface CardProps {
@@ -8,25 +10,47 @@ interface CardProps {
   }
 
 const TrivialCard: React.FC<CardProps> = ({ card }) =>  {
-    
-    const checkAnswer = (value: any) => {
 
+    const [cardData, setCardData] = useState<ICard>(card);
+
+    const [buttonClass, setButtonClass] = useState<string[]>(['btn btn-primary', 'btn btn-primary', 'btn btn-primary', 'btn btn-primary']);
+    
+    const checkAnswer = (answer: string, index: number) => {
+        setCardData({
+            ...cardData,
+            answered: true
+        });
+
+        // set all classes to secondary
+        setButtonClass(['btn btn-secondary', 'btn btn-secondary', 'btn btn-secondary', 'btn btn-secondary']);
+
+        for (let i = 0; i < cardData.answers.length; i++) {
+            if (cardData.answers[i] === answer) {
+                setButtonClass([...buttonClass.slice(0, i), 'btn btn-danger', ...buttonClass.slice(i + 1)]);
+            }
+            if (cardData.answers[i] === cardData.correctAnswer) {
+                setButtonClass([...buttonClass.slice(0, i), 'btn btn-success', ...buttonClass.slice(i + 1)]);
+            } 
+        }
+        
     }
     
     return ( 
-        <div className="col-md-4" key={card.question}>
+        <div className="col-md-4" key={cardData.question}>
         <div className="card mb-4 rounded-3 shadow-sm">
             <div className="card-header py-3">
-                <h4 className="my-0 fw-normal">{card.category}</h4>
+                <h4 className="my-0 fw-normal">{cardData.category}</h4>
             </div>
             <div className="card-body">
-                <h5 className="card-title pricing-card-title">{card.question}</h5>
+                <h5 className="card-title pricing-card-title">{cardData.question}</h5>
 
                 <div className="d-grid gap-2">
-                    {card.answers.map((answer: string) => {
+                    {cardData.answers.map((answer: string, index: number) => {
                         return <button
                             type="button"
-                            className="btn btn-primary"
+                            className={buttonClass[index]}
+                            onClick={() => {checkAnswer(answer, index)}}
+                            disabled={cardData.answered}
                         >
                             {answer}
                         </button>

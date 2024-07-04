@@ -23,8 +23,8 @@ async function getData(): Promise<Card[]> {
     return ( <>
         <div className="container">
             <div className="row">
-                {cards.map((card: Card) => {
-                    return <TrivialCard card={card.getJson()} key={card.question} />
+                {cards.map((card: Card, index: number) => {
+                    return <TrivialCard card={card.getJson()} key={index} />
                 })}
             </div>
         </div>
